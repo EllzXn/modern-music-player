@@ -118,6 +118,12 @@
                     </div>
                 </form>
 
+                <!-- GREETING AREA (Bagian Baru) -->
+                <div id="greeting-container" class="mt-8 mb-4 px-2 animate-fade-in">
+                    <h2 id="greeting-text" class="text-3xl font-bold text-gray-800 dark:text-white mb-2"></h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Mau dengar lagu apa hari ini?</p>
+                </div>
+
                 <!-- Status Message -->
                 <div id="message-area" class="text-center text-xs font-medium text-gray-400 dark:text-gray-500 min-h-[24px] py-2 transition-all shrink-0"></div>
 
@@ -248,8 +254,23 @@
             progFill: document.getElementById('progress-fill'),
             currTime: document.getElementById('current-time'),
             durTime: document.getElementById('duration'),
-            volSlider: document.getElementById('volume-slider')
+            volSlider: document.getElementById('volume-slider'),
+            greetingContainer: document.getElementById('greeting-container'), // Tambahan Baru
+            greetingText: document.getElementById('greeting-text')
         };
+
+        // --- Greeting Logic (Fitur Baru) ---
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let text = 'Selamat Pagi';
+            
+            if (hour >= 11 && hour < 15) text = 'Selamat Siang';
+            else if (hour >= 15 && hour < 18) text = 'Selamat Sore';
+            else if (hour >= 18 || hour < 4) text = 'Selamat Malam';
+            
+            els.greetingText.textContent = text;
+        }
+        setGreeting(); // Panggil saat load
 
         // Search
         els.searchForm.addEventListener('submit', async (e) => {
@@ -406,6 +427,8 @@
         function showUI(state) {
             els.playerCard.classList.add('hidden');
             els.resultsArea.classList.add('hidden');
+            els.greetingContainer.classList.add('hidden'); // Sembunyikan ucapan saat sibuk
+
             if(state === 'loading') showMsg('Searching...');
             else if(state === 'loading-song') showMsg('Loading audio...');
             else if(state === 'results') { showMsg(''); els.resultsArea.classList.remove('hidden'); }
@@ -414,5 +437,3 @@
     </script>
 </body>
 </html>
-
-
