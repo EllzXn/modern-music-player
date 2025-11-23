@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muse - Modern Music Player</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Config Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#8b5cf6', // Violet Soft
+                            600: '#7c3aed',
+                        },
+                        dark: {
+                            bg: '#0f172a',    // Background halaman (sangat gelap)
+                            card: '#1e293b',  // Background kartu (sedikit lebih terang)
+                            input: '#020617'  // Background input (paling gelap untuk kontras)
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'scale-up': 'scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        scaleUp: {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom Range Slider Styling */
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        
+        /* Thumb */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #8b5cf6; margin-top: -6px; box-shadow: 0 0 0 2px #fff; 
+            cursor: pointer; transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        
+        /* Track */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #e2e8f0; border-radius: 9999px;
+        }
+        
+        /* Dark Mode Adjustments */
+        .dark input[type=range]::-webkit-slider-runnable-track { background: #334155; }
+        .dark input[type=range]::-webkit-slider-thumb { box-shadow: 0 0 0 2px #1e293b; }
+        
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-dark-bg dark:text-gray-100 transition-colors duration-300 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Card Container -->
+    <div class="w-full max-w-md bg-white dark:bg-dark-card rounded-[2rem] shadow-2xl overflow-hidden transition-colors duration-300 relative border border-gray-200 dark:border-slate-700 flex flex-col h-[85vh] max-h-[800px]">
+        
+        <!-- Header (Sticky & Z-Index Tinggi) -->
+        <div class="px-6 py-4 flex justify-between items-center bg-white/90 dark:bg-dark-card/90 backdrop-blur-md sticky top-0 z-30 border-b border-gray-100 dark:border-slate-700">
+            <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+            </div>
+            <h1 class="text-lg font-bold tracking-tight text-gray-800 dark:text-white absolute left-1/2 transform -translate-x-1/2">Muse</h1>
+            
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-all focus:outline-none">
+                <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col">
+            
+            <div class="px-6 py-6 flex-1 flex flex-col">
+                
+                <!-- Search Bar -->
+                <!-- Menggunakan bg-slate-900 (dark:input) untuk kontras di dark mode -->
+                <form id="search-form" class="relative mb-2 group z-10 shrink-0">
+                    <input type="text" id="search-input" placeholder="Search songs, artist..." 
+                        class="w-full pl-11 pr-4 py-4 bg-gray-100 dark:bg-dark-input border-2 border-transparent focus:border-primary-500 rounded-2xl text-sm font-medium text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all shadow-sm" required>
+                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </form>
+
+                <!-- Status Message -->
+                <div id="message-area" class="text-center text-xs font-medium text-gray-400 dark:text-gray-500 min-h-[24px] py-2 transition-all shrink-0"></div>
+
+                <!-- SEARCH RESULTS LIST -->
+                <div id="results-area" class="hidden space-y-3 pb-6 animate-fade-in">
+                    <!-- Items injected here -->
+                </div>
+
+                <!-- MUSIC PLAYER VIEW -->
+                <div id="player-card" class="hidden flex-col flex-1 animate-scale-up">
+                    
+                    <!-- Back Button -->
+                    <button id="back-to-search" class="self-start mb-6 flex items-center text-xs font-bold text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors bg-gray-100 dark:bg-slate-800 px-4 py-2 rounded-full hover:bg-primary-50 dark:hover:bg-slate-700">
+                        <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Back
+                    </button>
+
+                    <!-- Album Art Container -->
+                    <!-- Aspect Square + Width Full + MX Auto untuk centering -->
+                    <div class="w-full max-w-[280px] aspect-square mx-auto mb-8 relative group">
+                        <!-- Glow Effect -->
+                        <div class="absolute -inset-4 bg-primary-500 blur-2xl opacity-20 rounded-full group-hover:opacity-30 transition-opacity duration-700 animate-pulse"></div>
+                        
+                        <!-- Image -->
+                        <img id="cover-art" src="" 
+                            class="absolute inset-0 w-full h-full object-cover rounded-3xl shadow-2xl relative z-10 transform group-hover:scale-[1.02] transition-transform duration-500 bg-gray-200 dark:bg-slate-700" 
+                            alt="Album Art">
+                    </div>
+
+                    <!-- Song Info -->
+                    <div class="text-center mb-6 w-full px-4">
+                        <h2 id="song-title" class="text-2xl font-bold text-gray-900 dark:text-white truncate mb-1.5 leading-tight">Title</h2>
+                        <p id="song-channel" class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Artist Name</p>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full mb-6 px-2">
+                        <div class="relative group cursor-pointer h-2 py-1" id="progress-container">
+                            <div class="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div id="progress-fill" class="h-full bg-primary-500 w-0 rounded-full transition-all duration-100 ease-linear relative"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-1 text-[10px] font-bold text-gray-400 tracking-wider">
+                            <span id="current-time">0:00</span>
+                            <span id="duration">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex items-center justify-between w-full px-4 mb-8">
+                        <!-- Loop -->
+                        <button id="loop-btn" class="p-3 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-full transition-all relative" title="Loop">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <span id="loop-indicator" class="absolute top-2 right-2 w-2 h-2 bg-primary-500 rounded-full border-2 border-white dark:border-dark-card hidden"></span>
+                        </button>
+
+                        <!-- Play/Pause -->
+                        <button id="play-pause-btn" class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:scale-105 active:scale-95 transition-all duration-300 mx-4">
+                            <svg id="play-icon" class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+
+                        <!-- Download -->
+                        <a id="download-btn" href="#" download class="p-3 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-full transition-all" title="Download">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        </a>
+                    </div>
+
+                    <!-- Volume -->
+                    <div class="w-full mt-auto flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border border-transparent dark:border-slate-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.75" class="w-full h-1 bg-transparent appearance-none cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Audio -->
+    <audio id="audio-player" class="hidden"></audio>
+
+    <script>
+        // --- Theme Logic ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            showSun();
+        } else {
+            htmlElement.classList.remove('dark');
+            showMoon();
+        }
+
+        function showSun() { sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); }
+        function showMoon() { moonIcon.classList.remove('hidden'); sunIcon.classList.add('hidden'); }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if(htmlElement.classList.contains('dark')){ localStorage.theme = 'dark'; showSun(); }
+            else { localStorage.theme = 'light'; showMoon(); }
+        });
+
+        // --- App Logic ---
+        const API_SEARCH = 'https://etzy-api.vercel.app/search/youtube?q=';
+        const API_PLAY = 'https://etzy-api.vercel.app/downloader/ytplay?q=';
+
+        const els = {
+            searchForm: document.getElementById('search-form'),
+            searchInput: document.getElementById('search-input'),
+            msgArea: document.getElementById('message-area'),
+            resultsArea: document.getElementById('results-area'),
+            playerCard: document.getElementById('player-card'),
+            backBtn: document.getElementById('back-to-search'),
+            cover: document.getElementById('cover-art'),
+            title: document.getElementById('song-title'),
+            channel: document.getElementById('song-channel'),
+            audio: document.getElementById('audio-player'),
+            playBtn: document.getElementById('play-pause-btn'),
+            playIcon: document.getElementById('play-icon'),
+            pauseIcon: document.getElementById('pause-icon'),
+            loopBtn: document.getElementById('loop-btn'),
+            loopInd: document.getElementById('loop-indicator'),
+            dlBtn: document.getElementById('download-btn'),
+            progCont: document.getElementById('progress-container'),
+            progFill: document.getElementById('progress-fill'),
+            currTime: document.getElementById('current-time'),
+            durTime: document.getElementById('duration'),
+            volSlider: document.getElementById('volume-slider')
+        };
+
+        // Search
+        els.searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const q = els.searchInput.value.trim();
+            if(!q) return;
+
+            showUI('loading');
+            stopAudio();
+
+            try {
+                const res = await fetch(API_SEARCH + encodeURIComponent(q));
+                const data = await res.json();
+                
+                // Cek status dan result
+                if(data.status && data.result && data.result.length > 0) {
+                    // Filter: Pastikan ada title, link, dan imageUrl
+                    const valid = data.result.filter(i => i.title && i.link && i.imageUrl).slice(0, 10);
+                    
+                    if(valid.length > 0) {
+                        displayResults(valid);
+                    } else {
+                        showMsg('No valid results found.', true);
+                    }
+                } else {
+                    showMsg('No results found.', true);
+                }
+            } catch (e) { 
+                console.error(e);
+                showMsg('Connection error.', true); 
+            }
+        });
+
+        els.backBtn.addEventListener('click', () => {
+            els.playerCard.classList.add('hidden');
+            els.resultsArea.classList.remove('hidden');
+            stopAudio();
+            showMsg('');
+        });
+
+        function displayResults(items) {
+            els.resultsArea.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-4 p-3 rounded-2xl bg-white dark:bg-slate-800/40 hover:bg-primary-50 dark:hover:bg-slate-800 border border-transparent hover:border-primary-100 dark:hover:border-slate-700 cursor-pointer transition-all group shadow-sm hover:shadow-md';
+                div.innerHTML = `
+                    <div class="relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-gray-200">
+                        <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                        <span class="absolute bottom-1 right-1 text-[10px] font-bold text-white bg-black/60 px-1.5 py-0.5 rounded backdrop-blur-sm">${item.duration || '0:00'}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 truncate mb-1 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">${item.title}</h3>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">${item.channel || 'Artist'}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 text-primary-500 shadow-sm flex items-center justify-center transform translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                `;
+                div.onclick = () => loadSong(item.link);
+                els.resultsArea.appendChild(div);
+            });
+            showUI('results');
+        }
+
+        async function loadSong(url) {
+            showUI('loading-song');
+            try {
+                const res = await fetch(API_PLAY + encodeURIComponent(url));
+                const data = await res.json();
+                if(data.success && data.result?.downloadUrl) setupPlayer(data.result);
+                else throw new Error('Stream failed');
+            } catch (e) {
+                showMsg('Failed to load song.', true);
+                els.resultsArea.classList.remove('hidden');
+                els.playerCard.classList.add('hidden');
+            }
+        }
+
+        function setupPlayer(data) {
+            const m = data.metadata;
+            els.cover.src = m.cover || '';
+            els.title.textContent = m.title || 'Unknown';
+            els.channel.textContent = m.channel || 'Artist';
+            els.dlBtn.href = data.downloadUrl;
+            els.audio.src = data.downloadUrl;
+            els.audio.volume = els.volSlider.value;
+            
+            els.playIcon.classList.add('hidden');
+            els.pauseIcon.classList.remove('hidden');
+            updateProgress(0, 0);
+            
+            showUI('player');
+            els.audio.play().catch(console.error);
+        }
+
+        // Controls
+        function stopAudio() { els.audio.pause(); els.audio.currentTime = 0; }
+        
+        els.playBtn.onclick = () => {
+            if(els.audio.paused) {
+                els.audio.play();
+                els.playIcon.classList.add('hidden');
+                els.pauseIcon.classList.remove('hidden');
+            } else {
+                els.audio.pause();
+                els.playIcon.classList.remove('hidden');
+                els.pauseIcon.classList.add('hidden');
+            }
+        };
+
+        els.loopBtn.onclick = () => {
+            els.audio.loop = !els.audio.loop;
+            els.loopInd.classList.toggle('hidden', !els.audio.loop);
+            els.loopBtn.classList.toggle('text-primary-500', els.audio.loop);
+            els.loopBtn.classList.toggle('bg-primary-50', els.audio.loop);
+            els.loopBtn.classList.toggle('dark:bg-slate-900', els.audio.loop);
+        };
+
+        els.volSlider.oninput = (e) => els.audio.volume = e.target.value;
+        
+        els.audio.ontimeupdate = () => updateProgress(els.audio.currentTime, els.audio.duration);
+        els.audio.onended = () => {
+            if(!els.audio.loop) {
+                els.playIcon.classList.remove('hidden');
+                els.pauseIcon.classList.add('hidden');
+            }
+        };
+
+        els.progCont.onclick = (e) => {
+            const rect = els.progCont.getBoundingClientRect();
+            const dur = els.audio.duration;
+            if(dur) els.audio.currentTime = ((e.clientX - rect.left) / rect.width) * dur;
+        };
+
+        function updateProgress(curr, dur) {
+            const pct = dur ? (curr / dur) * 100 : 0;
+            els.progFill.style.width = pct + '%';
+            els.currTime.textContent = fmtTime(curr);
+            els.durTime.textContent = fmtTime(dur);
+        }
+
+        function fmtTime(s) {
+            if(isNaN(s)) return "0:00";
+            const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+            return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function showMsg(txt, err = false) {
+            els.msgArea.textContent = txt;
+            els.msgArea.className = `text-center text-xs font-medium mb-2 ${err ? 'text-red-500' : 'text-gray-400 dark:text-gray-500'}`;
+        }
+
+        function showUI(state) {
+            els.playerCard.classList.add('hidden');
+            els.resultsArea.classList.add('hidden');
+            if(state === 'loading') showMsg('Searching...');
+            else if(state === 'loading-song') showMsg('Loading audio...');
+            else if(state === 'results') { showMsg(''); els.resultsArea.classList.remove('hidden'); }
+            else if(state === 'player') { showMsg(''); els.playerCard.classList.remove('hidden'); }
+        }
+    </script>
+</body>
+</html>
+
+
