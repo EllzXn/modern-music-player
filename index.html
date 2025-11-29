@@ -6,7 +6,6 @@
     <title>ZTune - Immersive Player</title>
 
     <link rel="shortcut icon" href="https://files.catbox.moe/s248au.jpg" type="image/x-icon"/>
-
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -49,49 +48,18 @@
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-
-        /* Scrollbar */
         * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
         *:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
-
-        /* Slider */
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #fff; margin-top: -4px; cursor: pointer; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #3f3f46; border-radius: 9999px; }
-
-        /* Marquee Text Animation (Jalan, Pause, Ulang) */
-        .marquee-container {
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        }
-        
-        .marquee-content {
-            display: inline-block;
-            min-width: 100%;
-        }
-
-        /* Jika teks panjang, beri class ini via JS */
-        .animate-scroll {
-            animation: scroll-left 12s linear infinite;
-        }
-
-        @keyframes scroll-left {
-            0%, 15% { transform: translateX(0); } /* Pause awal */
-            85%, 100% { transform: translateX(-100%); } /* Jalan ke kiri */
-        }
-
-        /* Ambient Glow */
-        .ambient-glow {
-            position: fixed; width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%; pointer-events: none; z-index: 0;
-            animation: blob 15s infinite ease-in-out;
-        }
-
+        .marquee-container { overflow: hidden; white-space: nowrap; position: relative; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
+        .marquee-content { display: inline-block; min-width: 100%; }
+        .animate-scroll { animation: scroll-left 12s linear infinite; }
+        @keyframes scroll-left { 0%, 15% { transform: translateX(0); } 85%, 100% { transform: translateX(-100%); } }
+        .ambient-glow { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none; z-index: 0; animation: blob 15s infinite ease-in-out; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -106,15 +74,20 @@
             <div class="w-3 h-3 rounded-full bg-[#febc2e] shadow-[0_0_10px_rgba(254,188,46,0.3)]"></div>
             <div class="w-3 h-3 rounded-full bg-[#28c840] shadow-[0_0_10px_rgba(40,200,64,0.3)]"></div>
         </div>
-        <div class="absolute left-1/2 transform -translate-x-1/2">
-            <h1 class="text-xl font-bold tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 cursor-default">ZTune</h1>
+        
+        <div class="absolute left-1/2 transform -translate-x-1/2 flex bg-white/5 rounded-full p-1 backdrop-blur-sm border border-white/5">
+            <button id="tab-search" class="px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg">Search</button>
+            <button id="tab-library" class="px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all">Library</button>
         </div>
+
         <button id="search-toggle-btn" class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-all focus:outline-none">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </button>
     </header>
 
-    <main class="flex-1 w-full max-w-6xl mx-auto flex flex-col relative z-10 overflow-hidden px-4 md:px-6 pb-20"> <div id="search-container" class="hidden w-full py-4 animate-slide-down shrink-0 transition-all">
+    <main class="flex-1 w-full max-w-6xl mx-auto flex flex-col relative z-10 overflow-hidden px-4 md:px-6 pb-20">
+        
+        <div id="search-container" class="hidden w-full py-4 animate-slide-down shrink-0 transition-all">
             <form id="search-form" class="relative group w-full">
                 <input type="text" id="search-input" placeholder="Search songs or artists..." 
                     class="w-full pl-12 pr-4 py-4 bg-surface/80 backdrop-blur-md border border-white/10 focus:border-primary-500 rounded-2xl text-base text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500 transition-all shadow-lg" autocomplete="off">
@@ -125,17 +98,34 @@
         </div>
 
         <div id="content-area" class="flex-1 overflow-y-auto mt-2 px-1 relative">
-            
+
             <div id="greeting-container" class="mt-8 mb-8 text-center animate-fade-in flex flex-col justify-center h-[50vh]">
                 <span class="text-primary-500 text-xs font-bold tracking-[0.3em] uppercase mb-4 animate-pulse">Ready to Listen?</span>
                 <h2 id="greeting-text" class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">Music Awaits.</h2>
-                <p class="text-gray-500 text-sm md:text-base font-light max-w-md mx-auto">Tekan tombol pencarian di pojok kanan atas.</p>
+                <p class="text-gray-500 text-sm md:text-base font-light max-w-md mx-auto">Gunakan tab di atas untuk mencari atau melihat koleksi lagumu.</p>
             </div>
 
             <div id="message-area" class="text-center text-sm font-medium text-gray-400 py-4 transition-all hidden"></div>
 
-            <div id="results-area" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-24 animate-fade-in">
+            <div id="results-area" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-24 animate-fade-in"></div>
+            
+            <div id="library-area" class="hidden pb-24 animate-fade-in">
+                <div class="flex items-center justify-between mb-6 px-2">
+                    <h3 class="text-xl font-bold text-white">Your Liked Songs</h3>
+                    <span id="library-count" class="text-xs text-gray-500 font-mono">0 songs</span>
                 </div>
+                
+                <div id="library-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                
+                <div id="empty-library-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center">
+                    <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-gray-500">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </div>
+                    <p class="text-gray-400">Belum ada lagu yang disukai.</p>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -150,6 +140,9 @@
             </div>
         </div>
         <div class="flex items-center gap-4 pr-2">
+            <button id="mini-like-btn" class="text-gray-400 hover:text-red-500 transition-colors focus:outline-none">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </button>
             <button id="mini-play-btn" class="text-white hover:text-primary-400 focus:outline-none p-1">
                 <svg id="mini-play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 <svg id="mini-pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -158,7 +151,7 @@
     </div>
 
     <div id="player-overlay" class="fixed inset-0 z-[60] bg-[#050505] hidden flex-col transition-all duration-500">
-        
+
         <div class="absolute inset-0 z-0 overflow-hidden opacity-30 pointer-events-none">
             <img id="player-bg-image" src="" class="w-full h-full object-cover blur-3xl scale-125">
             <div class="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]"></div>
@@ -169,13 +162,16 @@
                 <svg class="w-6 h-6 text-gray-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <span class="text-xs font-bold tracking-widest uppercase text-gray-500">Now Playing</span>
-            <div class="w-10"></div>
+            
+            <button id="full-like-btn" class="p-2 rounded-full hover:bg-white/10 transition-all text-gray-400">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </button>
         </div>
 
         <div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-6 pb-12">
-            
+
             <div class="flex flex-col md:flex-row items-center w-full gap-8 md:gap-16">
-                
+
                 <div class="w-full md:w-1/2 flex justify-center">
                     <div class="relative w-[70vw] h-[70vw] max-w-[320px] max-h-[320px] md:w-[400px] md:h-[400px] group">
                         <div class="absolute inset-0 bg-primary-500 blur-[50px] opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
@@ -184,7 +180,7 @@
                 </div>
 
                 <div class="w-full md:w-1/2 flex flex-col justify-center mt-6 md:mt-0">
-                    
+
                     <div class="text-center md:text-left mb-8 overflow-hidden w-full">
                         <div id="marquee-wrapper" class="marquee-container w-full">
                             <h2 id="player-title" class="text-2xl md:text-4xl font-bold text-white leading-tight mb-2 marquee-content w-max">Song Title</h2>
@@ -253,7 +249,15 @@
             greeting: document.getElementById('greeting-container'),
             resultsArea: document.getElementById('results-area'),
             msgArea: document.getElementById('message-area'),
-            
+
+            // Tabs
+            tabSearch: document.getElementById('tab-search'),
+            tabLibrary: document.getElementById('tab-library'),
+            libraryArea: document.getElementById('library-area'),
+            libraryList: document.getElementById('library-list'),
+            emptyLibraryMsg: document.getElementById('empty-library-msg'),
+            libraryCount: document.getElementById('library-count'),
+
             // Full Player
             playerOverlay: document.getElementById('player-overlay'),
             closePlayerBtn: document.getElementById('close-player-btn'),
@@ -262,7 +266,8 @@
             pTitle: document.getElementById('player-title'),
             pArtist: document.getElementById('player-artist'),
             marqueeWrapper: document.getElementById('marquee-wrapper'),
-            
+            fullLikeBtn: document.getElementById('full-like-btn'),
+
             // Mini Player
             miniPlayer: document.getElementById('mini-player'),
             miniCover: document.getElementById('mini-cover'),
@@ -271,6 +276,7 @@
             miniPlayBtn: document.getElementById('mini-play-btn'),
             miniPlayIcon: document.getElementById('mini-play-icon'),
             miniPauseIcon: document.getElementById('mini-pause-icon'),
+            miniLikeBtn: document.getElementById('mini-like-btn'),
 
             // Audio Controls
             audio: document.getElementById('audio-player'),
@@ -282,7 +288,7 @@
             loopBtn: document.getElementById('loop-btn'),
             loopDot: document.getElementById('loop-dot'),
             dlBtn: document.getElementById('download-btn'),
-            
+
             progCont: document.getElementById('progress-container'),
             progFill: document.getElementById('progress-fill'),
             currTime: document.getElementById('current-time'),
@@ -290,61 +296,110 @@
             volSlider: document.getElementById('volume-slider')
         };
 
-        // --- GLOBAL VARIABLES FOR QUEUE ---
-        let playlist = [];
+        // --- GLOBAL VARIABLES ---
+        let playlist = []; // Playlist aktif
+        let searchResults = []; // Cache hasil pencarian
+        let favorites = JSON.parse(localStorage.getItem('ztune_likes')) || [];
         let currentSongIndex = -1;
         let isSearchVisible = false;
+        let currentContext = 'search'; // 'search' atau 'library'
 
-        // --- 1. SEARCH TOGGLE & GREETING LOGIC ---
+        // --- 1. TAB & DISPLAY LOGIC ---
+        function switchTab(tab) {
+            currentContext = tab;
+            
+            if (tab === 'search') {
+                els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
+                els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
+                
+                els.libraryArea.classList.add('hidden');
+                
+                // Logic perbaikan: hanya tampilkan greeting jika hasil search kosong
+                if (searchResults.length > 0) {
+                    els.resultsArea.classList.remove('hidden');
+                    els.greeting.classList.add('hidden');
+                } else {
+                    els.resultsArea.classList.add('hidden');
+                    // Jika sedang mengetik/search terbuka, greeting sembunyi. Jika tidak, tampil.
+                    if(!isSearchVisible) els.greeting.classList.remove('hidden');
+                }
+            } else {
+                els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
+                els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
+                
+                els.greeting.classList.add('hidden');
+                els.resultsArea.classList.add('hidden');
+                els.libraryArea.classList.remove('hidden');
+                
+                renderLibrary();
+            }
+            if(isSearchVisible && tab === 'library') {
+                els.searchToggle.click();
+            }
+        }
+
+        els.tabSearch.onclick = () => switchTab('search');
+        els.tabLibrary.onclick = () => switchTab('library');
+
+        // --- 2. SEARCH LOGIC ---
         els.searchToggle.addEventListener('click', () => {
             isSearchVisible = !isSearchVisible;
             if (isSearchVisible) {
-                // Buka Search
+                switchTab('search');
                 els.searchContainer.classList.remove('hidden');
                 els.searchInput.focus();
-                els.greeting.classList.add('hidden'); // Sembunyikan greeting saat ngetik
+                els.greeting.classList.add('hidden'); 
             } else {
-                // Tutup Search
                 els.searchContainer.classList.add('hidden');
-                
-                // Jika belum ada hasil search, ATAU hasil search disembunyikan, tampilkan Greeting lagi
-                if (els.resultsArea.classList.contains('hidden') || playlist.length === 0) {
-                    els.greeting.classList.remove('hidden');
-                    els.resultsArea.classList.add('hidden'); // Pastikan hasil lama hidden
-                }
+                if (searchResults.length === 0) els.greeting.classList.remove('hidden');
+                else els.resultsArea.classList.remove('hidden');
             }
         });
 
-        // --- 2. SEARCH EXECUTION ---
         els.searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const q = els.searchInput.value.trim();
             if(!q) return;
 
             showMsg('Searching...', false);
+            // Paksa sembunyi semua elemen saat loading agar tidak tumpang tindih
             els.resultsArea.classList.add('hidden');
             els.greeting.classList.add('hidden');
+            els.libraryArea.classList.add('hidden');
+            
+            // Set context ke search tanpa mentrigger logika kosong
+            currentContext = 'search';
 
             try {
                 const res = await fetch(API_SEARCH + encodeURIComponent(q));
                 const data = await res.json();
-                
+
                 if(data.status && data.result && data.result.length > 0) {
-                    const valid = data.result.filter(i => i.title && i.link).slice(0, 20); // Ambil 20 lagu
-                    playlist = valid; // Simpan ke playlist global
+                    const valid = data.result.filter(i => i.title && i.link).slice(0, 20);
+                    searchResults = valid; 
+                    playlist = valid; 
                     displayResults(valid);
                 } else {
                     showMsg('No results found.', true);
+                    els.greeting.classList.remove('hidden');
                 }
-      } catch (err) {
+            } catch (err) {
                 showMsg('Connection error.', true);
+                els.greeting.classList.remove('hidden');
             }
         });
 
         function displayResults(items) {
             showMsg('', false);
-            els.resultsArea.innerHTML = '';
+            // Perbaikan Bug 1 & 3: Reset tampilan secara eksplisit
+            els.greeting.classList.add('hidden');
+            els.libraryArea.classList.add('hidden');
             els.resultsArea.classList.remove('hidden');
+            els.resultsArea.innerHTML = '';
+            
+            // Pastikan tab style benar
+            els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
+            els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
 
             items.forEach((item, index) => {
                 const div = document.createElement('div');
@@ -358,92 +413,123 @@
                         <p class="text-[10px] md:text-xs text-gray-500 truncate">${item.channel || 'Artist'}</p>
                     </div>
                 `;
-                // Kirim Index, bukan URL saja, agar bisa queue
-                div.onclick = () => playSongByIndex(index);
+                div.onclick = () => playSong(item, index, 'search');
                 els.resultsArea.appendChild(div);
             });
         }
 
-        // --- 3. PLAYER LOGIC ---
-        async function playSongByIndex(index) {
-            currentSongIndex = index;
-            const item = playlist[index];
-            if(!item) return;
+        // --- 3. LIBRARY LOGIC (LIKED SONGS) ---
+        function toggleLike(song) {
+            if (!song) return;
+            
+            // Cek apakah sudah ada
+            const idx = favorites.findIndex(f => f.link === song.link);
+            
+            if (idx === -1) {
+                favorites.push(song);
+            } else {
+                favorites.splice(idx, 1);
+            }
+            
+            // Simpan ke LocalStorage
+            localStorage.setItem('ztune_likes', JSON.stringify(favorites));
+            
+            // Update tombol Like di player saat ini
+            updateLikeButtonState(song);
+            
+            // Jika kita sedang di tab library, refresh list agar sesuai
+            if (currentContext === 'library') {
+                renderLibrary();
+            }
+        }
 
-            // UI Updates
+        function updateLikeButtonState(song) {
+            if(!song) return;
+            // Gunakan .some() untuk pengecekan yang akurat
+            const isLiked = favorites.some(f => f.link === song.link);
+            
+            const colorClass = isLiked ? 'text-red-500 scale-110' : 'text-gray-400 hover:text-white';
+            
+            els.fullLikeBtn.className = `p-2 rounded-full transition-all ${colorClass}`;
+            els.miniLikeBtn.className = `transition-all focus:outline-none ${colorClass}`;
+        }
+
+        function renderLibrary() {
+            els.libraryList.innerHTML = '';
+            els.libraryCount.textContent = `${favorites.length} songs`;
+
+            if (favorites.length === 0) {
+                els.emptyLibraryMsg.classList.remove('hidden');
+                return;
+            }
+            els.emptyLibraryMsg.classList.add('hidden');
+
+            favorites.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-surface hover:bg-surfaceHighlight border border-white/5 p-3 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:scale-[1.02] group';
+                div.innerHTML = `
+                    <div class="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-gray-800">
+                        <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:opacity-80 transition-opacity">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-xs md:text-sm font-bold text-white truncate group-hover:text-primary-500 transition-colors">${item.title}</h3>
+                        <p class="text-[10px] md:text-xs text-gray-500 truncate">${item.channel || 'Artist'}</p>
+                    </div>
+                `;
+                div.onclick = () => playSong(item, index, 'library');
+                els.libraryList.appendChild(div);
+            });
+        }
+
+        // --- 4. PLAYER LOGIC ---
+        async function playSong(item, index, context) {
+            // Perbaikan Bug 2: 
+            // Saat memutar dari Library, kita buat COPY dari favorites ([...favorites]).
+            // Ini mencegah error "tidak bisa like kembali" (index bergeser) saat kita unlike lagu yang sedang diputar.
+            if (context === 'library') {
+                playlist = [...favorites];
+            } else {
+                playlist = searchResults;
+            }
+            currentContext = context;
+            currentSongIndex = index;
+
             openPlayerOverlay();
             
-            // Set Loading UI
             els.pTitle.textContent = item.title;
             els.pArtist.textContent = item.channel || 'Loading...';
             els.pCover.src = item.imageUrl;
             els.pBg.src = item.imageUrl;
-            
-            // Reset Mini Player Info
             els.miniTitle.textContent = item.title;
             els.miniArtist.textContent = item.channel;
             els.miniCover.src = item.imageUrl;
 
             checkMarquee(item.title);
+            updateLikeButtonState(item); // Update status tombol
 
             try {
                 const res = await fetch(API_PLAY + encodeURIComponent(item.link));
                 const data = await res.json();
-                
+
                 if(data.success && data.result?.downloadUrl) {
                     const m = data.result.metadata;
-                    // Update dengan metadata lebih akurat jika ada
                     els.pTitle.textContent = m.title || item.title;
                     checkMarquee(els.pTitle.textContent);
-                    
+
                     els.dlBtn.href = data.result.downloadUrl;
                     els.audio.src = data.result.downloadUrl;
                     els.audio.volume = els.volSlider.value;
-                    
+
                     playAudio();
                 } else {
                     console.error("Stream failed");
-                    // Auto skip jika gagal?
                 }
             } catch (e) {
                 console.error(e);
             }
         }
 
-        // --- 4. NAVIGATION & MINI PLAYER ---
-        function openPlayerOverlay() {
-            els.playerOverlay.classList.remove('hidden');
-            els.playerOverlay.classList.add('flex');
-            els.miniPlayer.classList.add('translate-y-[150%]'); // Sembunyikan mini
-            els.miniPlayer.classList.add('hidden');
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        function closePlayerOverlay() {
-            els.playerOverlay.classList.add('hidden');
-            els.playerOverlay.classList.remove('flex');
-            document.body.style.overflow = 'auto';
-            
-            // Tampilkan Mini Player jika lagu sedang aktif/pause
-            if(els.audio.src) {
-                els.miniPlayer.classList.remove('hidden');
-                // Sedikit delay biar animasinya smooth
-                setTimeout(() => {
-                    els.miniPlayer.classList.remove('translate-y-[150%]');
-                }, 10);
-            }
-        }
-
-        els.closePlayerBtn.onclick = closePlayerOverlay;
-        
-        // Klik body mini player -> Buka Full Player
-        els.miniPlayer.onclick = (e) => {
-            // Jangan buka jika yang diklik adalah tombol play/pause
-            if(e.target.closest('#mini-play-btn')) return;
-            openPlayerOverlay();
-        };
-
-        // --- 5. AUDIO CONTROLS & AUTO NEXT ---
+        // --- 5. AUDIO & NAVIGATION ---
         function playAudio() {
             els.audio.play().then(() => {
                 updatePlayIcons(true);
@@ -461,28 +547,32 @@
                 els.pauseIcon.classList.remove('hidden');
                 els.miniPlayIcon.classList.add('hidden');
                 els.miniPauseIcon.classList.remove('hidden');
+                els.miniCover.parentElement.classList.remove('paused-spin');
             } else {
                 els.playIcon.classList.remove('hidden');
                 els.pauseIcon.classList.add('hidden');
                 els.miniPlayIcon.classList.remove('hidden');
                 els.miniPauseIcon.classList.add('hidden');
+                els.miniCover.parentElement.classList.add('paused-spin');
             }
         }
 
-        // Main Button
         els.playBtn.onclick = () => els.audio.paused ? playAudio() : pauseAudio();
-        
-        // Mini Player Button
-        els.miniPlayBtn.onclick = () => els.audio.paused ? playAudio() : pauseAudio();
-
-        // Next Button
-        els.nextBtn.onclick = () => playNextSong();
-        els.prevBtn.onclick = () => {
-            if(currentSongIndex > 0) playSongByIndex(currentSongIndex - 1);
-            else els.audio.currentTime = 0;
+        els.miniPlayBtn.onclick = (e) => {
+            e.stopPropagation();
+            els.audio.paused ? playAudio() : pauseAudio();
         };
 
-        // Auto Next Logic
+        const handleLikeClick = (e) => {
+            e.stopPropagation();
+            // Ambil lagu yang sedang diputar berdasarkan playlist yang aktif
+            if (currentSongIndex !== -1 && playlist[currentSongIndex]) {
+                toggleLike(playlist[currentSongIndex]);
+            }
+        };
+        els.fullLikeBtn.onclick = handleLikeClick;
+        els.miniLikeBtn.onclick = handleLikeClick;
+
         els.audio.onended = () => {
             if (els.audio.loop) {
                 playAudio();
@@ -493,25 +583,49 @@
 
         function playNextSong() {
             if (currentSongIndex < playlist.length - 1) {
-                playSongByIndex(currentSongIndex + 1);
+                playSong(playlist[currentSongIndex + 1], currentSongIndex + 1, currentContext);
             } else {
-                // End of playlist, maybe loop to start?
-                // playSongByIndex(0); 
                 updatePlayIcons(false);
             }
         }
 
-        // Marquee Logic (Revisi 2)
+        els.nextBtn.onclick = playNextSong;
+        els.prevBtn.onclick = () => {
+            if(currentSongIndex > 0) playSong(playlist[currentSongIndex - 1], currentSongIndex - 1, currentContext);
+            else els.audio.currentTime = 0;
+        };
+
+        function openPlayerOverlay() {
+            els.playerOverlay.classList.remove('hidden');
+            els.playerOverlay.classList.add('flex');
+            els.miniPlayer.classList.add('translate-y-[150%]'); 
+            els.miniPlayer.classList.add('hidden');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closePlayerOverlay() {
+            els.playerOverlay.classList.add('hidden');
+            els.playerOverlay.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+
+            if(els.audio.src) {
+                els.miniPlayer.classList.remove('hidden');
+                setTimeout(() => {
+                    els.miniPlayer.classList.remove('translate-y-[150%]');
+                }, 10);
+            }
+        }
+
+        els.closePlayerBtn.onclick = closePlayerOverlay;
+        els.miniPlayer.onclick = (e) => {
+            if(!e.target.closest('button')) openPlayerOverlay();
+        };
+
         function checkMarquee(text) {
-            // Hapus animasi dulu
             els.pTitle.classList.remove('animate-scroll');
-            
-            // Cek panjang teks vs container
-            // Kita pakai timeout biar render dulu baru cek width
             setTimeout(() => {
                 const containerWidth = els.marqueeWrapper.clientWidth;
                 const textWidth = els.pTitle.scrollWidth;
-                
                 if (textWidth > containerWidth) {
                     els.pTitle.classList.add('animate-scroll');
                 }
