@@ -2,6 +2,10 @@
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
+   <!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ZTune - Immersive Player</title>
 
@@ -99,12 +103,63 @@
 
         <div id="content-area" class="flex-1 overflow-y-auto mt-2 px-1 relative">
 
-            <div id="greeting-container" class="mt-8 mb-8 text-center animate-fade-in flex flex-col justify-center h-[50vh]">
-                <span class="text-primary-500 text-xs font-bold tracking-[0.3em] uppercase mb-4 animate-pulse">Ready to Listen?</span>
-                <h2 id="greeting-text" class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">Music Awaits.</h2>
-                <p class="text-gray-500 text-sm md:text-base font-light max-w-md mx-auto">Gunakan tab di atas untuk mencari atau melihat koleksi lagumu.</p>
-            </div>
+            <div id="explore-area" class="animate-fade-in pb-10">
+                
+                <div id="greeting-container" class="mt-8 mb-8 text-center flex flex-col justify-center">
+                    <span class="text-primary-500 text-xs font-bold tracking-[0.3em] uppercase mb-4 animate-pulse">Ready to Listen?</span>
+                    <h2 id="greeting-text" class="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">Music Awaits.</h2>
+                </div>
 
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-white mb-4 px-1">Mood & Vibe</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button onclick="triggerSearch('lagu galau indonesia terbaru')" class="bg-gradient-to-br from-indigo-900 to-purple-900 hover:scale-[1.02] transition-transform p-4 rounded-2xl text-left h-24 flex flex-col justify-end border border-white/5 relative overflow-hidden group">
+                            <span class="absolute top-2 right-2 text-2xl opacity-50 group-hover:scale-110 transition-transform">🌧️</span>
+                            <span class="font-bold text-lg">Galau</span>
+                        </button>
+                        <button onclick="triggerSearch('lagu happy mood booster')" class="bg-gradient-to-br from-orange-900 to-yellow-900 hover:scale-[1.02] transition-transform p-4 rounded-2xl text-left h-24 flex flex-col justify-end border border-white/5 relative overflow-hidden group">
+                            <span class="absolute top-2 right-2 text-2xl opacity-50 group-hover:scale-110 transition-transform">⚡</span>
+                            <span class="font-bold text-lg">Happy</span>
+                        </button>
+                        <button onclick="triggerSearch('lagu chill santai')" class="bg-gradient-to-br from-teal-900 to-emerald-900 hover:scale-[1.02] transition-transform p-4 rounded-2xl text-left h-24 flex flex-col justify-end border border-white/5 relative overflow-hidden group">
+                            <span class="absolute top-2 right-2 text-2xl opacity-50 group-hover:scale-110 transition-transform">☕</span>
+                            <span class="font-bold text-lg">Chill</span>
+                        </button>
+                        <button onclick="triggerSearch('lofi hip hop study')" class="bg-gradient-to-br from-pink-900 to-rose-900 hover:scale-[1.02] transition-transform p-4 rounded-2xl text-left h-24 flex flex-col justify-end border border-white/5 relative overflow-hidden group">
+                            <span class="absolute top-2 right-2 text-2xl opacity-50 group-hover:scale-110 transition-transform">🎧</span>
+                            <span class="font-bold text-lg">Fokus</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-white mb-4 px-1">Featured Artists</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div onclick="triggerSearch('Saint House music')" class="bg-surface hover:bg-surfaceHighlight border border-white/5 p-4 rounded-2xl flex items-center gap-4 cursor-pointer transition-all hover:scale-[1.02] group">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-gray-700 to-gray-600 flex items-center justify-center text-xl font-bold text-white/50 group-hover:text-white transition-colors">SH</div>
+                            <div>
+                                <h4 class="font-bold text-white">Saint House</h4>
+                                <p class="text-xs text-gray-500">Artist</p>
+                            </div>
+                        </div>
+                        <div onclick="triggerSearch('Joon music')" class="bg-surface hover:bg-surfaceHighlight border border-white/5 p-4 rounded-2xl flex items-center gap-4 cursor-pointer transition-all hover:scale-[1.02] group">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-900 to-blue-700 flex items-center justify-center text-xl font-bold text-white/50 group-hover:text-white transition-colors">J</div>
+                            <div>
+                                <h4 class="font-bold text-white">Joon</h4>
+                                <p class="text-xs text-gray-500">Artist</p>
+                            </div>
+                        </div>
+                        <div onclick="triggerSearch('Keshi songs')" class="bg-surface hover:bg-surfaceHighlight border border-white/5 p-4 rounded-2xl flex items-center gap-4 cursor-pointer transition-all hover:scale-[1.02] group">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-rose-900 to-rose-700 flex items-center justify-center text-xl font-bold text-white/50 group-hover:text-white transition-colors">K</div>
+                            <div>
+                                <h4 class="font-bold text-white">Keshi</h4>
+                                <p class="text-xs text-gray-500">Artist</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div id="message-area" class="text-center text-sm font-medium text-gray-400 py-4 transition-all hidden"></div>
 
             <div id="results-area" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-24 animate-fade-in"></div>
@@ -246,7 +301,11 @@
             searchForm: document.getElementById('search-form'),
             searchInput: document.getElementById('search-input'),
             contentArea: document.getElementById('content-area'),
+            
+            // New Explore Elements
+            exploreArea: document.getElementById('explore-area'),
             greeting: document.getElementById('greeting-container'),
+            
             resultsArea: document.getElementById('results-area'),
             msgArea: document.getElementById('message-area'),
 
@@ -304,7 +363,7 @@
         let isSearchVisible = false;
         let currentContext = 'search'; // 'search' atau 'library'
 
-        // --- 1. TAB & DISPLAY LOGIC ---
+        // --- 1. TAB & DISPLAY LOGIC (BUG FIX HERE) ---
         function switchTab(tab) {
             currentContext = tab;
             
@@ -312,22 +371,24 @@
                 els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
                 els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
                 
+                // HIDE LIBRARY MUTLAK
                 els.libraryArea.classList.add('hidden');
                 
-                // Logic perbaikan: hanya tampilkan greeting jika hasil search kosong
+                // Logic: Jika ada hasil search, tampilkan result, sembunyikan explore/home
                 if (searchResults.length > 0) {
                     els.resultsArea.classList.remove('hidden');
-                    els.greeting.classList.add('hidden');
+                    els.exploreArea.classList.add('hidden');
                 } else {
+                    // Jika tidak ada hasil search, tampilkan home/explore
                     els.resultsArea.classList.add('hidden');
-                    // Jika sedang mengetik/search terbuka, greeting sembunyi. Jika tidak, tampil.
-                    if(!isSearchVisible) els.greeting.classList.remove('hidden');
+                    if(!isSearchVisible) els.exploreArea.classList.remove('hidden');
                 }
             } else {
                 els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
                 els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
                 
-                els.greeting.classList.add('hidden');
+                // HIDE ALL SEARCH RELATED MUTLAK
+                els.exploreArea.classList.add('hidden');
                 els.resultsArea.classList.add('hidden');
                 els.libraryArea.classList.remove('hidden');
                 
@@ -341,34 +402,47 @@
         els.tabSearch.onclick = () => switchTab('search');
         els.tabLibrary.onclick = () => switchTab('library');
 
-        // --- 2. SEARCH LOGIC ---
+        // --- 2. SEARCH & EXPLORE LOGIC ---
+        // Helper function for Categories & Artists buttons
+        function triggerSearch(query) {
+            els.searchInput.value = query;
+            // Tutup explore, buka loading
+            els.exploreArea.classList.add('hidden');
+            performSearch(query);
+            // Scroll to top
+            els.contentArea.scrollTop = 0;
+        }
+
+        // Main Search Toggle
         els.searchToggle.addEventListener('click', () => {
             isSearchVisible = !isSearchVisible;
             if (isSearchVisible) {
                 switchTab('search');
                 els.searchContainer.classList.remove('hidden');
                 els.searchInput.focus();
-                els.greeting.classList.add('hidden'); 
+                els.exploreArea.classList.add('hidden'); // Hide home when searching
             } else {
                 els.searchContainer.classList.add('hidden');
-                if (searchResults.length === 0) els.greeting.classList.remove('hidden');
+                if (searchResults.length === 0) els.exploreArea.classList.remove('hidden');
                 else els.resultsArea.classList.remove('hidden');
             }
         });
 
-        els.searchForm.addEventListener('submit', async (e) => {
+        els.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const q = els.searchInput.value.trim();
             if(!q) return;
+            performSearch(q);
+        });
 
+        async function performSearch(q) {
             showMsg('Searching...', false);
-            // Paksa sembunyi semua elemen saat loading agar tidak tumpang tindih
             els.resultsArea.classList.add('hidden');
-            els.greeting.classList.add('hidden');
+            els.exploreArea.classList.add('hidden');
             els.libraryArea.classList.add('hidden');
             
-            // Set context ke search tanpa mentrigger logika kosong
-            currentContext = 'search';
+            // Switch to search tab visual
+            els.tabSearch.click(); // Programmatically click to ensure state consistency
 
             try {
                 const res = await fetch(API_SEARCH + encodeURIComponent(q));
@@ -381,26 +455,21 @@
                     displayResults(valid);
                 } else {
                     showMsg('No results found.', true);
-                    els.greeting.classList.remove('hidden');
+                    els.exploreArea.classList.remove('hidden');
                 }
             } catch (err) {
                 showMsg('Connection error.', true);
-                els.greeting.classList.remove('hidden');
+                els.exploreArea.classList.remove('hidden');
             }
-        });
+        }
 
         function displayResults(items) {
             showMsg('', false);
-            // Perbaikan Bug 1 & 3: Reset tampilan secara eksplisit
-            els.greeting.classList.add('hidden');
+            els.exploreArea.classList.add('hidden');
             els.libraryArea.classList.add('hidden');
             els.resultsArea.classList.remove('hidden');
             els.resultsArea.innerHTML = '';
             
-            // Pastikan tab style benar
-            els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
-            els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
-
             items.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'bg-surface hover:bg-surfaceHighlight border border-white/5 p-3 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:scale-[1.02] group';
@@ -418,38 +487,23 @@
             });
         }
 
-        // --- 3. LIBRARY LOGIC (LIKED SONGS) ---
+        // --- 3. LIBRARY LOGIC ---
         function toggleLike(song) {
             if (!song) return;
-            
-            // Cek apakah sudah ada
             const idx = favorites.findIndex(f => f.link === song.link);
+            if (idx === -1) favorites.push(song);
+            else favorites.splice(idx, 1);
             
-            if (idx === -1) {
-                favorites.push(song);
-            } else {
-                favorites.splice(idx, 1);
-            }
-            
-            // Simpan ke LocalStorage
             localStorage.setItem('ztune_likes', JSON.stringify(favorites));
-            
-            // Update tombol Like di player saat ini
             updateLikeButtonState(song);
             
-            // Jika kita sedang di tab library, refresh list agar sesuai
-            if (currentContext === 'library') {
-                renderLibrary();
-            }
+            if (currentContext === 'library') renderLibrary();
         }
 
         function updateLikeButtonState(song) {
             if(!song) return;
-            // Gunakan .some() untuk pengecekan yang akurat
             const isLiked = favorites.some(f => f.link === song.link);
-            
             const colorClass = isLiked ? 'text-red-500 scale-110' : 'text-gray-400 hover:text-white';
-            
             els.fullLikeBtn.className = `p-2 rounded-full transition-all ${colorClass}`;
             els.miniLikeBtn.className = `transition-all focus:outline-none ${colorClass}`;
         }
@@ -483,9 +537,6 @@
 
         // --- 4. PLAYER LOGIC ---
         async function playSong(item, index, context) {
-            // Perbaikan Bug 2: 
-            // Saat memutar dari Library, kita buat COPY dari favorites ([...favorites]).
-            // Ini mencegah error "tidak bisa like kembali" (index bergeser) saat kita unlike lagu yang sedang diputar.
             if (context === 'library') {
                 playlist = [...favorites];
             } else {
@@ -505,7 +556,7 @@
             els.miniCover.src = item.imageUrl;
 
             checkMarquee(item.title);
-            updateLikeButtonState(item); // Update status tombol
+            updateLikeButtonState(item);
 
             try {
                 const res = await fetch(API_PLAY + encodeURIComponent(item.link));
@@ -529,7 +580,6 @@
             }
         }
 
-        // --- 5. AUDIO & NAVIGATION ---
         function playAudio() {
             els.audio.play().then(() => {
                 updatePlayIcons(true);
@@ -565,7 +615,6 @@
 
         const handleLikeClick = (e) => {
             e.stopPropagation();
-            // Ambil lagu yang sedang diputar berdasarkan playlist yang aktif
             if (currentSongIndex !== -1 && playlist[currentSongIndex]) {
                 toggleLike(playlist[currentSongIndex]);
             }
@@ -574,11 +623,8 @@
         els.miniLikeBtn.onclick = handleLikeClick;
 
         els.audio.onended = () => {
-            if (els.audio.loop) {
-                playAudio();
-            } else {
-                playNextSong();
-            }
+            if (els.audio.loop) playAudio();
+            else playNextSong();
         };
 
         function playNextSong() {
