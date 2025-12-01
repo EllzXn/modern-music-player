@@ -66,12 +66,12 @@
         .loading-spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         
-        /* FIXED GLASS NAVBAR CSS - Border removed */
+        /* FIXED GLASS NAVBAR CSS */
         .glass-nav {
             background-color: rgba(0, 0, 0, 0.4) !important;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-bottom: none; /* Hilangkan garis putih */
+            border-bottom: none;
         }
     </style>
 </head>
@@ -95,8 +95,9 @@
         </div>
         
         <div class="absolute left-1/2 transform -translate-x-1/2 flex bg-white/5 rounded-full p-1 backdrop-blur-sm border border-white/5">
-            <button id="tab-search" class="px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg">Search</button>
-            <button id="tab-library" class="px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all">Library</button>
+            <button id="tab-search" class="px-3 md:px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg">Search</button>
+            <button id="tab-library" class="px-3 md:px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all">Library</button>
+            <button id="tab-history" class="px-3 md:px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all">History</button>
         </div>
 
         <button id="search-toggle-btn" class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-all focus:outline-none">
@@ -119,7 +120,6 @@
         <div class="flex-1 mt-2 px-1 relative min-h-[500px]">
 
             <div id="explore-area" class="animate-fade-in pb-10 transition-opacity duration-300">
-                
                 <div id="greeting-container" class="mt-8 mb-8 text-center flex flex-col justify-center">
                     <span class="text-primary-500 text-xs font-bold tracking-[0.3em] uppercase mb-4 animate-pulse">Ready to Listen?</span>
                     <h2 id="greeting-text" class="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">Music Awaits.</h2>
@@ -147,8 +147,8 @@
                     </div>
                 </div>
             </div>
-            <div id="message-area" class="text-center text-sm font-medium text-gray-400 py-4 transition-all hidden"></div>
 
+            <div id="message-area" class="text-center text-sm font-medium text-gray-400 py-4 transition-all hidden"></div>
             <div id="results-area" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-24 animate-fade-in"></div>
             
             <div id="library-area" class="hidden pb-24 animate-fade-in">
@@ -156,15 +156,26 @@
                     <h3 class="text-xl font-bold text-white">Your Liked Songs</h3>
                     <span id="library-count" class="text-xs text-gray-500 font-mono">0 songs</span>
                 </div>
-                
-                <div id="library-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    </div>
-                
+                <div id="library-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
                 <div id="empty-library-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center">
                     <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-gray-500">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                     </div>
                     <p class="text-gray-400">Belum ada lagu yang disukai.</p>
+                </div>
+            </div>
+
+            <div id="history-area" class="hidden pb-24 animate-fade-in">
+                <div class="flex items-center justify-between mb-6 px-2">
+                    <h3 class="text-xl font-bold text-white">Recently Played</h3>
+                    <button onclick="clearHistory()" class="text-xs text-red-400 hover:text-red-300 font-bold uppercase tracking-wider">Clear</button>
+                </div>
+                <div id="history-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                <div id="empty-history-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center">
+                    <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-gray-500">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <p class="text-gray-400">Belum ada riwayat lagu.</p>
                 </div>
             </div>
 
@@ -208,7 +219,7 @@
             </button>
         </div>
 
-        <div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-6 pb-12">
+        <div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-6 pb-2">
             <div class="flex flex-col md:flex-row items-center w-full gap-8 md:gap-16">
                 <div class="w-full md:w-1/2 flex justify-center">
                     <div class="relative w-[70vw] h-[70vw] max-w-[320px] max-h-[320px] md:w-[400px] md:h-[400px] group">
@@ -242,20 +253,16 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                             <div id="loop-dot" class="absolute -top-1 -right-1 w-1.5 h-1.5 bg-primary-500 rounded-full hidden"></div>
                         </button>
-
                         <button id="prev-btn" class="text-gray-400 hover:text-white transition-colors">
                              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                         </button>
-
                         <button id="play-pause-btn" class="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
                             <svg id="play-icon" class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                         </button>
-
                         <button id="next-btn" class="text-gray-400 hover:text-white transition-colors">
                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
-
                         <a id="download-btn" href="#" download class="text-gray-500 hover:text-white transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         </a>
@@ -285,13 +292,11 @@
             searchIconWrapper: document.getElementById('search-icon-wrapper'), 
             contentArea: document.getElementById('content-area'),
             
-            // Nav Buttons
             btnRed: document.getElementById('nav-btn-red'),
             btnGreen: document.getElementById('nav-btn-green'),
             btnYellow: document.getElementById('nav-btn-yellow'),
             navContainer: document.getElementById('traffic-light-container'),
             
-            // Explore Elements
             exploreArea: document.getElementById('explore-area'),
             greeting: document.getElementById('greeting-container'),
             
@@ -301,12 +306,17 @@
             // Tabs
             tabSearch: document.getElementById('tab-search'),
             tabLibrary: document.getElementById('tab-library'),
+            tabHistory: document.getElementById('tab-history'), 
             libraryArea: document.getElementById('library-area'),
             libraryList: document.getElementById('library-list'),
             emptyLibraryMsg: document.getElementById('empty-library-msg'),
             libraryCount: document.getElementById('library-count'),
+            
+            // History
+            historyArea: document.getElementById('history-area'),
+            historyList: document.getElementById('history-list'),
+            emptyHistoryMsg: document.getElementById('empty-history-msg'),
 
-            // Full Player
             playerOverlay: document.getElementById('player-overlay'),
             closePlayerBtn: document.getElementById('close-player-btn'),
             pCover: document.getElementById('player-cover'),
@@ -316,7 +326,6 @@
             marqueeWrapper: document.getElementById('marquee-wrapper'),
             fullLikeBtn: document.getElementById('full-like-btn'),
 
-            // Mini Player
             miniPlayer: document.getElementById('mini-player'),
             miniCover: document.getElementById('mini-cover'),
             miniTitle: document.getElementById('mini-title'),
@@ -326,7 +335,6 @@
             miniPauseIcon: document.getElementById('mini-pause-icon'),
             miniLikeBtn: document.getElementById('mini-like-btn'),
 
-            // Audio Controls
             audio: document.getElementById('audio-player'),
             playBtn: document.getElementById('play-pause-btn'),
             playIcon: document.getElementById('play-icon'),
@@ -348,14 +356,15 @@
         let playlist = []; 
         let searchResults = []; 
         let favorites = JSON.parse(localStorage.getItem('ztune_likes')) || [];
+        let history = JSON.parse(localStorage.getItem('ztune_history')) || [];
         let currentSongIndex = -1;
         let isSearchVisible = false;
         let currentContext = 'search'; 
         let activeLoadingBtn = null;
         let originalIconHTML = '';
         let originalSearchIconHTML = els.searchIconWrapper.innerHTML; 
-
-        // --- 0. SCROLL HEADER LOGIC ---
+        
+        // --- SCROLL HEADER ---
         els.contentArea.addEventListener('scroll', () => {
             if (els.contentArea.scrollTop > 20) {
                 els.header.classList.add('glass-nav');
@@ -366,127 +375,114 @@
             }
         });
 
-        // --- 1. NAVIGATION BUTTONS LOGIC ---
+        // --- NAV LOGIC ---
         function updateNavState(hasResults) {
             const redIcon = els.btnRed.querySelector('svg');
             const greenIcon = els.btnGreen.querySelector('svg');
 
             if (hasResults) {
-                // Mode Hasil Search: 
-                // 1. Collapse Kuning (shrink to 0)
                 els.btnYellow.classList.add('w-0', 'h-0', 'opacity-0', 'm-0');
                 els.btnYellow.classList.remove('w-3', 'h-3');
-                
-                // 2. Perbesar Merah & Hijau (w-5 h-5)
                 els.btnRed.classList.remove('w-3', 'h-3', 'cursor-default');
                 els.btnRed.classList.add('w-5', 'h-5', 'cursor-pointer');
                 redIcon.classList.remove('opacity-0');
-
                 els.btnGreen.classList.remove('w-3', 'h-3', 'cursor-default');
                 els.btnGreen.classList.add('w-5', 'h-5', 'cursor-pointer');
                 greenIcon.classList.remove('opacity-0');
             } else {
-                // Mode Home: 
-                // 1. Restore Kuning
                 els.btnYellow.classList.remove('w-0', 'h-0', 'opacity-0', 'm-0');
                 els.btnYellow.classList.add('w-3', 'h-3');
-
-                // 2. Restore Merah & Hijau
                 els.btnRed.classList.remove('w-5', 'h-5', 'cursor-pointer');
                 els.btnRed.classList.add('w-3', 'h-3', 'cursor-default');
                 redIcon.classList.add('opacity-0');
-
                 els.btnGreen.classList.remove('w-5', 'h-5', 'cursor-pointer');
                 els.btnGreen.classList.add('w-3', 'h-3', 'cursor-default');
                 greenIcon.classList.add('opacity-0');
             }
         }
 
-        // RED BUTTON (BACKWARD) -> Ke Home
         els.btnRed.addEventListener('click', () => {
-            if (els.exploreArea.classList.contains('hidden')) {
+            if (els.exploreArea.classList.contains('hidden') && currentContext === 'search') {
                 els.resultsArea.classList.add('hidden');
                 els.exploreArea.classList.remove('hidden');
                 updateNavState(false); 
             }
         });
 
-        // GREEN BUTTON (FORWARD) -> Ke Hasil Search (jika ada)
         els.btnGreen.addEventListener('click', () => {
-             if (searchResults.length > 0 && els.resultsArea.classList.contains('hidden')) {
+             if (searchResults.length > 0 && els.resultsArea.classList.contains('hidden') && currentContext === 'search') {
                 els.exploreArea.classList.add('hidden');
                 els.resultsArea.classList.remove('hidden');
                 updateNavState(true);
             }
         });
 
-
-        // --- 2. TAB & DISPLAY LOGIC ---
+        // --- TABS ---
         function switchTab(tab) {
             currentContext = tab;
             
+            // Reset Styles
+            const activeClass = "px-3 md:px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
+            const inactiveClass = "px-3 md:px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
+            
+            els.tabSearch.className = tab === 'search' ? activeClass : inactiveClass;
+            els.tabLibrary.className = tab === 'library' ? activeClass : inactiveClass;
+            els.tabHistory.className = tab === 'history' ? activeClass : inactiveClass;
+
+            // Hide All Areas
+            els.libraryArea.classList.add('hidden');
+            els.historyArea.classList.add('hidden');
+            els.exploreArea.classList.add('hidden');
+            els.resultsArea.classList.add('hidden');
+
             if (tab === 'search') {
-                els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
-                els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
-                
-                els.libraryArea.classList.add('hidden');
-                
                 if (searchResults.length > 0) {
                     els.resultsArea.classList.remove('hidden');
-                    els.exploreArea.classList.add('hidden');
                     updateNavState(true);
                 } else {
-                    els.resultsArea.classList.add('hidden');
                     if(!isSearchVisible) els.exploreArea.classList.remove('hidden');
                     updateNavState(false);
                 }
-            } else {
-                els.tabLibrary.className = "px-4 py-1.5 text-xs font-bold rounded-full bg-white text-black transition-all shadow-lg";
-                els.tabSearch.className = "px-4 py-1.5 text-xs font-bold rounded-full text-gray-400 hover:text-white transition-all";
-                
-                els.exploreArea.classList.add('hidden');
-                els.resultsArea.classList.add('hidden');
+            } else if (tab === 'library') {
                 els.libraryArea.classList.remove('hidden');
-                
-                // Di library, tombol nav dimatikan & Kuning muncul
-                els.btnYellow.classList.remove('w-0', 'h-0', 'opacity-0', 'm-0');
-                els.btnYellow.classList.add('w-3', 'h-3');
-                
-                // Reset size merah/hijau
-                els.btnRed.classList.remove('w-5', 'h-5', 'cursor-pointer');
-                els.btnRed.classList.add('w-3', 'h-3', 'cursor-default');
-                els.btnGreen.classList.remove('w-5', 'h-5', 'cursor-pointer');
-                els.btnGreen.classList.add('w-3', 'h-3', 'cursor-default');
-
-                // Hide Icons
-                const redIcon = els.btnRed.querySelector('svg');
-                const greenIcon = els.btnGreen.querySelector('svg');
-                redIcon.classList.add('opacity-0');
-                greenIcon.classList.add('opacity-0');
-                
+                resetNavVisuals();
                 renderLibrary();
+            } else if (tab === 'history') {
+                els.historyArea.classList.remove('hidden');
+                resetNavVisuals();
+                renderHistory();
             }
-            if(isSearchVisible && tab === 'library') {
+
+            if(isSearchVisible && tab !== 'search') {
                 els.searchToggle.click();
             }
         }
 
+        function resetNavVisuals() {
+            els.btnYellow.classList.remove('w-0', 'h-0', 'opacity-0', 'm-0');
+            els.btnYellow.classList.add('w-3', 'h-3');
+            els.btnRed.classList.remove('w-5', 'h-5', 'cursor-pointer');
+            els.btnRed.classList.add('w-3', 'h-3', 'cursor-default');
+            els.btnGreen.classList.remove('w-5', 'h-5', 'cursor-pointer');
+            els.btnGreen.classList.add('w-3', 'h-3', 'cursor-default');
+            els.btnRed.querySelector('svg').classList.add('opacity-0');
+            els.btnGreen.querySelector('svg').classList.add('opacity-0');
+        }
+
         els.tabSearch.onclick = () => switchTab('search');
         els.tabLibrary.onclick = () => switchTab('library');
+        els.tabHistory.onclick = () => switchTab('history');
 
-        // --- 3. SEARCH & EXPLORE LOGIC ---
-        
+        // --- SEARCH ---
         async function triggerSearch(query, btnElement) {
-            // Reset loading sebelumnya
             if(activeLoadingBtn) {
                 const prevIcon = activeLoadingBtn.querySelector('.mood-icon');
                 if(prevIcon) {
                     prevIcon.innerHTML = originalIconHTML;
+                    prevIcon.classList.remove('text-white'); 
                     prevIcon.classList.add('group-hover:scale-110');
                 }
             }
-
-            // Set loading baru (Mood Button)
             if(btnElement) {
                 activeLoadingBtn = btnElement;
                 const iconSpan = btnElement.querySelector('.mood-icon');
@@ -496,10 +492,7 @@
                     iconSpan.classList.remove('group-hover:scale-110');
                 }
             }
-
             await new Promise(r => setTimeout(r, 600));
-
-            // REMOVED: els.searchInput.value = query; (Agar input tetap bersih)
             performSearch(query);
             els.contentArea.scrollTop = 0;
         }
@@ -521,10 +514,7 @@
             e.preventDefault();
             const q = els.searchInput.value.trim();
             if(!q) return;
-            
-            // Set Input Loading Spinner
             els.searchIconWrapper.innerHTML = `<svg class="w-5 h-5 text-primary-500 loading-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
-            
             performSearch(q);
         });
 
@@ -532,6 +522,7 @@
             showMsg('Searching...', false);
             els.resultsArea.classList.add('hidden'); 
             els.libraryArea.classList.add('hidden');
+            els.historyArea.classList.add('hidden');
             
             els.tabSearch.click(); 
 
@@ -554,8 +545,6 @@
                 resetLoadingUI();
                 els.exploreArea.classList.remove('hidden');
             }
-            
-            // Restore Search Icon
             els.searchIconWrapper.innerHTML = originalSearchIconHTML;
         }
 
@@ -572,34 +561,37 @@
 
         function displayResults(items) {
             showMsg('', false);
-            
             els.exploreArea.classList.add('hidden');
             resetLoadingUI(); 
-
             els.libraryArea.classList.add('hidden');
+            els.historyArea.classList.add('hidden');
             els.resultsArea.classList.remove('hidden');
             els.resultsArea.innerHTML = '';
-            
             updateNavState(true);
 
             items.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-surface hover:bg-surfaceHighlight border border-white/5 p-3 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:scale-[1.02] group';
-                div.innerHTML = `
-                    <div class="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-gray-800">
-                        <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:opacity-80 transition-opacity">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-xs md:text-sm font-bold text-white truncate group-hover:text-primary-500 transition-colors">${item.title}</h3>
-                        <p class="text-[10px] md:text-xs text-gray-500 truncate">${item.channel || 'Artist'}</p>
-                    </div>
-                `;
-                div.onclick = () => playSong(item, index, 'search');
+                const div = createSongElement(item, index, 'search');
                 els.resultsArea.appendChild(div);
             });
         }
 
-        // --- 4. LIBRARY & PLAYER ---
+        function createSongElement(item, index, context) {
+            const div = document.createElement('div');
+            div.className = 'bg-surface hover:bg-surfaceHighlight border border-white/5 p-3 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:scale-[1.02] group';
+            div.innerHTML = `
+                <div class="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-gray-800">
+                    <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:opacity-80 transition-opacity">
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-xs md:text-sm font-bold text-white truncate group-hover:text-primary-500 transition-colors">${item.title}</h3>
+                    <p class="text-[10px] md:text-xs text-gray-500 truncate">${item.channel || 'Artist'}</p>
+                </div>
+            `;
+            div.onclick = () => playSong(item, index, context);
+            return div;
+        }
+
+        // --- LIBRARY & HISTORY ---
         function toggleLike(song) {
             if (!song) return;
             const idx = favorites.findIndex(f => f.link === song.link);
@@ -618,6 +610,21 @@
             els.miniLikeBtn.className = `transition-all focus:outline-none ${colorClass}`;
         }
 
+        function addToHistory(song) {
+            const idx = history.findIndex(h => h.link === song.link);
+            if (idx !== -1) history.splice(idx, 1);
+            history.unshift(song);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('ztune_history', JSON.stringify(history));
+            if (currentContext === 'history') renderHistory();
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('ztune_history');
+            renderHistory();
+        }
+
         function renderLibrary() {
             els.libraryList.innerHTML = '';
             els.libraryCount.textContent = `${favorites.length} songs`;
@@ -627,27 +634,32 @@
             }
             els.emptyLibraryMsg.classList.add('hidden');
             favorites.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-surface hover:bg-surfaceHighlight border border-white/5 p-3 rounded-2xl flex items-center gap-3 cursor-pointer transition-all hover:scale-[1.02] group';
-                div.innerHTML = `
-                    <div class="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-gray-800">
-                        <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:opacity-80 transition-opacity">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-xs md:text-sm font-bold text-white truncate group-hover:text-primary-500 transition-colors">${item.title}</h3>
-                        <p class="text-[10px] md:text-xs text-gray-500 truncate">${item.channel || 'Artist'}</p>
-                    </div>
-                `;
-                div.onclick = () => playSong(item, index, 'library');
-                els.libraryList.appendChild(div);
+                els.libraryList.appendChild(createSongElement(item, index, 'library'));
             });
         }
 
+        function renderHistory() {
+            els.historyList.innerHTML = '';
+            if (history.length === 0) {
+                els.emptyHistoryMsg.classList.remove('hidden');
+                return;
+            }
+            els.emptyHistoryMsg.classList.add('hidden');
+            history.forEach((item, index) => {
+                els.historyList.appendChild(createSongElement(item, index, 'history'));
+            });
+        }
+
+        // --- PLAYER ---
         async function playSong(item, index, context) {
             if (context === 'library') playlist = [...favorites];
-            else playlist = searchResults;
+            else if (context === 'history') playlist = [...history];
+            else if (context === 'search') playlist = searchResults;
+
             currentContext = context;
             currentSongIndex = index;
+            addToHistory(item);
+
             openPlayerOverlay();
             els.pTitle.textContent = item.title;
             els.pArtist.textContent = item.channel || 'Loading...';
@@ -674,8 +686,13 @@
             } catch (e) { console.error(e); }
         }
 
-        function playAudio() { els.audio.play().then(() => updatePlayIcons(true)).catch(e => console.log("Auto-play blocked")); }
-        function pauseAudio() { els.audio.pause(); updatePlayIcons(false); }
+        function playAudio() { 
+            els.audio.play().then(() => updatePlayIcons(true)).catch(e => console.log("Auto-play blocked")); 
+        }
+        function pauseAudio() { 
+            els.audio.pause(); 
+            updatePlayIcons(false); 
+        }
         function updatePlayIcons(isPlaying) {
             if(isPlaying) {
                 els.playIcon.classList.add('hidden'); els.pauseIcon.classList.remove('hidden');
@@ -696,8 +713,23 @@
         function playNextSong() { if (currentSongIndex < playlist.length - 1) playSong(playlist[currentSongIndex + 1], currentSongIndex + 1, currentContext); else updatePlayIcons(false); }
         els.nextBtn.onclick = playNextSong;
         els.prevBtn.onclick = () => { if(currentSongIndex > 0) playSong(playlist[currentSongIndex - 1], currentSongIndex - 1, currentContext); else els.audio.currentTime = 0; };
-        function openPlayerOverlay() { els.playerOverlay.classList.remove('hidden'); els.playerOverlay.classList.add('flex'); els.miniPlayer.classList.add('translate-y-[150%]'); els.miniPlayer.classList.add('hidden'); document.body.style.overflow = 'hidden'; }
-        function closePlayerOverlay() { els.playerOverlay.classList.add('hidden'); els.playerOverlay.classList.remove('flex'); document.body.style.overflow = 'auto'; if(els.audio.src) { els.miniPlayer.classList.remove('hidden'); setTimeout(() => els.miniPlayer.classList.remove('translate-y-[150%]'), 10); } }
+        
+        function openPlayerOverlay() { 
+            els.playerOverlay.classList.remove('hidden'); 
+            els.playerOverlay.classList.add('flex'); 
+            els.miniPlayer.classList.add('translate-y-[150%]'); 
+            els.miniPlayer.classList.add('hidden'); 
+            document.body.style.overflow = 'hidden'; 
+        }
+        function closePlayerOverlay() { 
+            els.playerOverlay.classList.add('hidden'); 
+            els.playerOverlay.classList.remove('flex'); 
+            document.body.style.overflow = 'auto'; 
+            if(els.audio.src) { 
+                els.miniPlayer.classList.remove('hidden'); 
+                setTimeout(() => els.miniPlayer.classList.remove('translate-y-[150%]'), 10); 
+            } 
+        }
         els.closePlayerBtn.onclick = closePlayerOverlay;
         els.miniPlayer.onclick = (e) => { if(!e.target.closest('button')) openPlayerOverlay(); };
         function checkMarquee(text) { els.pTitle.classList.remove('animate-scroll'); setTimeout(() => { if (els.pTitle.scrollWidth > els.marqueeWrapper.clientWidth) els.pTitle.classList.add('animate-scroll'); }, 100); }
