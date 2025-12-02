@@ -48,7 +48,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
         * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
@@ -66,7 +66,7 @@
         .loading-spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         
-        /* FIXED GLASS NAVBAR CSS */
+        /* GLASS EFFECTS */
         .glass-nav {
             background-color: rgba(0, 0, 0, 0.4) !important;
             backdrop-filter: blur(20px);
@@ -74,7 +74,6 @@
             border-bottom: none;
         }
         
-        /* GLASS MINI PLAYER CSS */
         .glass-player {
             background: rgba(20, 20, 20, 0.4) !important; 
             backdrop-filter: blur(16px);
@@ -95,9 +94,7 @@
             <button id="nav-btn-red" class="w-3 h-3 rounded-full bg-[#ff5f57] shadow-[0_0_10px_rgba(255,95,87,0.3)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-110 focus:outline-none cursor-default">
                 <svg class="w-2 h-2 text-black opacity-0 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
             </button>
-            
             <div id="nav-btn-yellow" class="w-3 h-3 rounded-full bg-[#febc2e] shadow-[0_0_10px_rgba(254,188,46,0.3)] transition-all duration-300 origin-center"></div>
-            
             <button id="nav-btn-green" class="w-3 h-3 rounded-full bg-[#28c840] shadow-[0_0_10px_rgba(40,200,64,0.3)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-110 focus:outline-none cursor-default">
                 <svg class="w-2 h-2 text-black opacity-0 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </button>
@@ -213,7 +210,7 @@
         </div>
     </div>
 
-    <div id="player-overlay" class="fixed inset-0 z-[60] bg-[#050505] hidden flex-col transition-all duration-500">
+    <div id="player-overlay" class="fixed inset-0 z-[60] bg-[#050505] flex flex-col transition-transform duration-500 ease-in-out translate-y-[100%]">
         <div class="absolute inset-0 z-0 overflow-hidden opacity-30 pointer-events-none">
             <img id="player-bg-image" src="" class="w-full h-full object-cover blur-3xl scale-125">
             <div class="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]"></div>
@@ -384,6 +381,38 @@
                 els.header.classList.add('bg-transparent');
             }
         });
+
+        // --- SWIPE LOGIC (NEW) ---
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const tabsOrder = ['search', 'library', 'history'];
+
+        els.contentArea.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        els.contentArea.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const swipeThreshold = 50; 
+            const currentIndex = tabsOrder.indexOf(currentContext);
+            
+            // Swipe Right -> Prev Tab (e.g. Library to Search)
+            if (touchEndX - touchStartX > swipeThreshold) {
+                if (currentIndex > 0) {
+                    switchTab(tabsOrder[currentIndex - 1]);
+                }
+            }
+            // Swipe Left -> Next Tab (e.g. Search to Library)
+            if (touchStartX - touchEndX > swipeThreshold) {
+                if (currentIndex < tabsOrder.length - 1) {
+                    switchTab(tabsOrder[currentIndex + 1]);
+                }
+            }
+        }
 
         // --- NAV LOGIC ---
         function updateNavState(hasResults) {
@@ -585,11 +614,12 @@
             });
         }
 
-        // Updated for Card Layout (Transparent default, Dark on Hover)
+        // Updated for Card Layout (Transparent default, Glass on Hover)
         function createSongElement(item, index, context) {
             const div = document.createElement('div');
-            // 'bg-transparent' by default, 'hover:bg-[#18181b]' on hover
-            div.className = 'bg-transparent hover:bg-[#18181b] p-3 rounded-xl flex flex-col gap-3 cursor-pointer transition-all duration-300 group';
+            // Changed default 'bg-transparent' to include a very slight hit area, but transparent
+            // On hover: 'bg-white/10' and 'backdrop-blur-md'
+            div.className = 'bg-transparent hover:bg-white/10 hover:backdrop-blur-md border border-transparent hover:border-white/5 p-3 rounded-xl flex flex-col gap-3 cursor-pointer transition-all duration-300 group';
             
             div.innerHTML = `
                 <div class="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-800 shadow-lg">
@@ -670,7 +700,7 @@
             });
         }
 
-        // --- PLAYER ---
+        // --- PLAYER & ANIMATION ---
         async function playSong(item, index, context) {
             if (context === 'library') playlist = [...favorites];
             else if (context === 'history') playlist = [...history];
@@ -734,24 +764,31 @@
         els.nextBtn.onclick = playNextSong;
         els.prevBtn.onclick = () => { if(currentSongIndex > 0) playSong(playlist[currentSongIndex - 1], currentSongIndex - 1, currentContext); else els.audio.currentTime = 0; };
         
+        // ANIMATION: Slide Up/Down
         function openPlayerOverlay() { 
-            els.playerOverlay.classList.remove('hidden'); 
-            els.playerOverlay.classList.add('flex'); 
-            els.miniPlayer.classList.add('translate-y-[150%]'); 
+            // Reset Mini Player position (hidden)
+            els.miniPlayer.classList.add('translate-y-[150%]');
             els.miniPlayer.classList.add('hidden'); 
+            
+            // Show Full Player with animation
+            els.playerOverlay.classList.remove('translate-y-[100%]');
             document.body.style.overflow = 'hidden'; 
         }
         function closePlayerOverlay() { 
-            els.playerOverlay.classList.add('hidden'); 
-            els.playerOverlay.classList.remove('flex'); 
+            // Hide Full Player
+            els.playerOverlay.classList.add('translate-y-[100%]');
             document.body.style.overflow = 'auto'; 
+            
+            // Show Mini Player if playing
             if(els.audio.src) { 
                 els.miniPlayer.classList.remove('hidden'); 
+                // Small delay to allow transition
                 setTimeout(() => els.miniPlayer.classList.remove('translate-y-[150%]'), 10); 
             } 
         }
         els.closePlayerBtn.onclick = closePlayerOverlay;
         els.miniPlayer.onclick = (e) => { if(!e.target.closest('button')) openPlayerOverlay(); };
+        
         function checkMarquee(text) { els.pTitle.classList.remove('animate-scroll'); setTimeout(() => { if (els.pTitle.scrollWidth > els.marqueeWrapper.clientWidth) els.pTitle.classList.add('animate-scroll'); }, 100); }
         els.loopBtn.onclick = () => { els.audio.loop = !els.audio.loop; els.loopDot.classList.toggle('hidden', !els.audio.loop); els.loopBtn.classList.toggle('text-white', els.audio.loop); };
         els.volSlider.oninput = (e) => els.audio.volume = e.target.value;
