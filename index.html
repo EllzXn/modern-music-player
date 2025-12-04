@@ -418,13 +418,14 @@
 
         // --- CHECK URL PARAMS (DEEP LINKING) ---
         function checkUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            const songUrl = params.get('lagu');
-            if(songUrl) {
-                // Fetch & Play
-                // Need a temp item structure
-                const tempItem = { link: songUrl, title: 'Loading...', imageUrl: '' };
-                playSong(tempItem, 0, 'shared');
+            // Updated logic to check for hash instead of query param
+            const hash = window.location.hash;
+            if(hash && hash.startsWith('#lagu=')) {
+                const songUrl = decodeURIComponent(hash.substring(6)); // Remove '#lagu='
+                if(songUrl) {
+                    const tempItem = { link: songUrl, title: 'Loading...', imageUrl: '' };
+                    playSong(tempItem, 0, 'shared');
+                }
             }
         }
 
@@ -445,8 +446,9 @@
             els.optionsMenu.classList.add('hidden'); 
             if(currentSongIndex !== -1 && playlist[currentSongIndex]) {
                 const song = playlist[currentSongIndex];
-                // Construct URL with parameter
-                const shareUrl = `${window.location.origin}${window.location.pathname}?lagu=${encodeURIComponent(song.link)}`;
+                
+                // Construct URL with HASH
+                const shareUrl = `${window.location.origin}${window.location.pathname}#lagu=${encodeURIComponent(song.link)}`;
                 
                 const shareData = {
                     title: 'ZTune Music',
@@ -778,7 +780,7 @@
             if(!song) return;
             const isLiked = favorites.some(f => f.link === song.link);
             const colorClass = isLiked ? 'text-red-500 scale-110' : 'text-gray-400 hover:text-white';
-            els.fullLikeBtn.className = `text-gray-400 hover:text-white transition-colors ${colorClass}`; // Updated class logic
+            els.fullLikeBtn.className = `p-2 rounded-full transition-all ${colorClass}`;
             els.miniLikeBtn.className = `transition-all focus:outline-none ${colorClass}`;
         }
 
@@ -833,7 +835,7 @@
 
             currentContext = context;
             currentSongIndex = index;
-            addToHistory(item);
+            // Removed addToHistory(item) from here. Moved to success block.
 
             openPlayerOverlay();
             els.pTitle.textContent = item.title;
@@ -854,17 +856,25 @@
                 const data = await res.json();
                 if(data.success && data.result?.downloadUrl) {
                     const m = data.result.metadata;
-                    // Update metadata with better quality info from Play API
-                    els.pTitle.textContent = m.title || item.title;
-                    els.pArtist.textContent = m.author || item.channel;
-                    if(m.thumbnail) {
-                        els.pCover.src = m.thumbnail;
-                        els.pBg.src = m.thumbnail;
-                        els.miniCover.src = m.thumbnail;
-                    }
+                    // Update Item Metadata
+                    item.title = m.title || item.title;
+                    item.channel = m.author || item.channel;
+                    if(m.thumbnail) item.imageUrl = m.thumbnail;
+
+                    // Update UI with new data
+                    els.pTitle.textContent = item.title;
+                    els.pArtist.textContent = item.channel;
+                    els.pCover.src = item.imageUrl;
+                    els.pBg.src = item.imageUrl;
+                    els.miniTitle.textContent = item.title;
+                    els.miniArtist.textContent = item.channel;
+                    els.miniCover.src = item.imageUrl;
                     
                     checkMarquee(els.pTitle.textContent);
                     
+                    // NOW Add to History
+                    addToHistory(item);
+
                     // Update DL Link
                     els.menuDownloadBtn.href = data.result.downloadUrl;
                     
