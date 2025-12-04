@@ -418,12 +418,11 @@
 
         // --- CHECK URL PARAMS (DEEP LINKING) ---
         function checkUrlParams() {
-            // Updated logic to check for hash instead of query param
             const hash = window.location.hash;
             if(hash && hash.startsWith('#lagu=')) {
-                const songUrl = decodeURIComponent(hash.substring(6)); // Remove '#lagu='
+                const songUrl = decodeURIComponent(hash.substring(6)); 
                 if(songUrl) {
-                    const tempItem = { link: songUrl, title: 'Loading...', imageUrl: '' };
+                    const tempItem = { link: songUrl, title: 'Loading...', imageUrl: 'https://via.placeholder.com/300', channel: 'Loading...' };
                     playSong(tempItem, 0, 'shared');
                 }
             }
@@ -446,8 +445,6 @@
             els.optionsMenu.classList.add('hidden'); 
             if(currentSongIndex !== -1 && playlist[currentSongIndex]) {
                 const song = playlist[currentSongIndex];
-                
-                // Construct URL with HASH
                 const shareUrl = `${window.location.origin}${window.location.pathname}#lagu=${encodeURIComponent(song.link)}`;
                 
                 const shareData = {
@@ -835,7 +832,7 @@
 
             currentContext = context;
             currentSongIndex = index;
-            // Removed addToHistory(item) from here. Moved to success block.
+            // History added AFTER success
 
             openPlayerOverlay();
             els.pTitle.textContent = item.title;
@@ -856,25 +853,28 @@
                 const data = await res.json();
                 if(data.success && data.result?.downloadUrl) {
                     const m = data.result.metadata;
-                    // Update Item Metadata
+                    
+                    // UPDATE METADATA (Fix for Shared Link)
                     item.title = m.title || item.title;
-                    item.channel = m.author || item.channel;
+                    item.channel = m.author || item.channel; // Map author to channel
                     if(m.thumbnail) item.imageUrl = m.thumbnail;
 
-                    // Update UI with new data
+                    // Update UI
                     els.pTitle.textContent = item.title;
                     els.pArtist.textContent = item.channel;
                     els.pCover.src = item.imageUrl;
                     els.pBg.src = item.imageUrl;
+                    
+                    // Update Mini Player
                     els.miniTitle.textContent = item.title;
                     els.miniArtist.textContent = item.channel;
                     els.miniCover.src = item.imageUrl;
-                    
+
                     checkMarquee(els.pTitle.textContent);
                     
-                    // NOW Add to History
+                    // ADD TO HISTORY NOW (With correct data)
                     addToHistory(item);
-
+                    
                     // Update DL Link
                     els.menuDownloadBtn.href = data.result.downloadUrl;
                     
