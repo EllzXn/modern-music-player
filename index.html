@@ -1,310 +1,330 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZTune - Soft Luxury</title>
+    <title>ZTune - Galactic Edition</title>
 
     <link rel="shortcut icon" href="https://files.catbox.moe/s248au.jpg" type="image/x-icon"/>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#0a0a0a',       // Hitam Matte TGH
+                            surface: '#171717',  // Abu Gelap Card TGH
+                            border: '#262626',   // Garis Halus TGH
+                            red: '#e11d48',      // Merah Rose TGH
+                            hover: '#be123c',    // Hover Merah
+                        }
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Scrollbar Minimalis TGH */
+        body::-webkit-scrollbar { width: 6px; }
+        body::-webkit-scrollbar-track { background: #0a0a0a; }
+        body::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Utilitas Slider */
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            height: 12px; width: 12px; 
+            border-radius: 50%; 
+            background: #e11d48; /* Brand Red */
+            margin-top: -5px; 
+            cursor: pointer; 
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track { 
+            width: 100%; height: 2px; 
+            cursor: pointer; 
+            background: #262626; 
+            border-radius: 9999px; 
+        }
+
+        /* Marquee untuk Judul Lagu */
+        .marquee-container { overflow: hidden; white-space: nowrap; position: relative; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
+        .marquee-content { display: inline-block; min-width: 100%; }
+        .animate-scroll { animation: scroll-left 12s linear infinite; }
+        @keyframes scroll-left { 0%, 15% { transform: translateX(0); } 85%, 100% { transform: translateX(-100%); } }
+    </style>
 </head>
-<body class="bg-[#0a0a0a] text-white h-screen w-full overflow-hidden flex flex-col relative selection:bg-white/20 selection:text-white font-sans antialiased">
+<body class="bg-brand-bg text-zinc-300 font-sans antialiased h-screen flex flex-col overflow-hidden selection:bg-brand-red selection:text-white">
 
-    <div class="fixed inset-0 pointer-events-none z-0">
-        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-white/3 rounded-full blur-[100px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-white/2 rounded-full blur-[120px]"></div>
-    </div>
-
-    <header id="main-header" class="fixed top-0 left-0 right-0 px-6 py-6 flex justify-between items-center z-50 transition-all duration-500">
-        <div class="flex items-center gap-3" id="traffic-light-container">
-            <button id="nav-btn-red" class="w-3 h-3 rounded-full bg-white/10 hover:bg-white/30 transition-all cursor-default"></button>
-            <div id="nav-btn-yellow" class="w-3 h-3 rounded-full bg-white/10 transition-all"></div>
-            <button id="nav-btn-green" class="w-3 h-3 rounded-full bg-white/10 hover:bg-white/30 transition-all cursor-default"></button>
-        </div>
-
-        <div class="absolute left-1/2 transform -translate-x-1/2 flex bg-white/5 border border-white/5 rounded-full p-1.5 backdrop-blur-xl shadow-lg">
-            <button id="tab-search" class="px-5 py-2 text-xs font-medium rounded-full text-white bg-white/10 transition-all shadow-sm">Search</button>
-            <button id="tab-library" class="px-5 py-2 text-xs font-medium rounded-full text-gray-400 hover:text-white transition-all">Library</button>
-            <button id="tab-history" class="px-5 py-2 text-xs font-medium rounded-full text-gray-400 hover:text-white transition-all">History</button>
-        </div>
-
-        <button id="search-toggle-btn" class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-all focus:outline-none">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        </button>
-    </header>
-
-    <main id="content-area" class="flex-1 w-full max-w-7xl mx-auto flex flex-col relative z-10 overflow-y-auto px-4 md:px-8 pb-24 pt-28 no-scrollbar scroll-smooth">
-
-        <div id="search-container" class="hidden w-full py-4 animate-slide-down shrink-0 transition-all">
-            <form id="search-form" class="relative group w-full max-w-2xl mx-auto">
-                <input type="text" id="search-input" placeholder="Search for minimal luxury..." 
-                    class="w-full pl-6 pr-12 py-4 bg-white/5 backdrop-blur-2xl border border-white/5 focus:border-white/20 rounded-2xl text-base text-white placeholder-gray-500 focus:outline-none focus:ring-0 transition-all shadow-xl" autocomplete="off">
-                <div id="search-icon-wrapper" class="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-            </form>
-        </div>
-
-        <div class="flex-1 mt-4 px-1 relative min-h-[500px]">
-
-            <div id="explore-area" class="animate-fade-in pb-10 transition-opacity duration-300">
-                <div id="greeting-container" class="mt-10 mb-12 text-center flex flex-col justify-center">
-                    <span class="text-gray-500 text-[10px] font-medium tracking-[0.4em] uppercase mb-4">ZTune Player</span>
-                    <h2 id="greeting-text" class="text-4xl md:text-5xl font-light text-white mb-2 tracking-tight">Pure <span class="font-medium text-gray-200">Audio.</span></h2>
-                </div>
-
-                <div id="quick-picks-container" class="mb-12 hidden">
-                    <div class="flex items-center gap-2 mb-6 px-1 border-b border-white/5 pb-2">
-                        <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider">Quick Picks</h3>
-                    </div>
-                    <div id="quick-picks-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"></div>
-                </div>
-
-                <div class="mb-8 max-w-4xl mx-auto">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <button onclick="triggerSearch('lagu galau indonesia terbaru', this)" class="mood-card group">
-                            <span class="mood-icon text-xl text-gray-400 group-hover:text-white transition-colors mb-2">🌧️</span>
-                            <span class="text-sm font-medium text-gray-400 group-hover:text-white">Melancholy</span>
-                        </button>
-                        <button onclick="triggerSearch('lagu happy mood booster', this)" class="mood-card group">
-                            <span class="mood-icon text-xl text-gray-400 group-hover:text-white transition-colors mb-2">⚡</span>
-                            <span class="text-sm font-medium text-gray-400 group-hover:text-white">Energy</span>
-                        </button>
-                        <button onclick="triggerSearch('lagu chill santai', this)" class="mood-card group">
-                            <span class="mood-icon text-xl text-gray-400 group-hover:text-white transition-colors mb-2">☕</span>
-                            <span class="text-sm font-medium text-gray-400 group-hover:text-white">Chill</span>
-                        </button>
-                        <button onclick="triggerSearch('lofi hip hop study', this)" class="mood-card group">
-                            <span class="mood-icon text-xl text-gray-400 group-hover:text-white transition-colors mb-2">🎧</span>
-                            <span class="text-sm font-medium text-gray-400 group-hover:text-white">Focus</span>
-                        </button>
-                    </div>
+    <nav id="main-header" class="fixed w-full z-50 top-0 bg-brand-bg/80 backdrop-blur-lg border-b border-brand-border transition-all duration-300">
+        <div class="container mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="font-bold text-xl tracking-tight text-white cursor-default">
+                    Z<span class="text-brand-red">TUNE</span>.
                 </div>
             </div>
 
-            <div id="message-area" class="text-center text-sm font-medium text-gray-500 py-10 transition-all hidden"></div>
+            <div class="hidden md:flex gap-1 bg-brand-surface/50 p-1 rounded-full border border-brand-border/50 backdrop-blur-md absolute left-1/2 transform -translate-x-1/2">
+                <button id="tab-search" class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-brand-red text-white shadow-lg shadow-brand-red/20">Search</button>
+                <button id="tab-library" class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 text-zinc-400 hover:text-white hover:bg-white/5">Library</button>
+                <button id="tab-history" class="px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 text-zinc-400 hover:text-white hover:bg-white/5">History</button>
+            </div>
 
-            <div id="results-area" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-24 animate-fade-in"></div>
+            <button id="search-toggle-btn" class="p-2 text-zinc-400 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </button>
+        </div>
+    </nav>
 
-            <div id="library-area" class="hidden pb-24 animate-fade-in w-full">
+    <main id="content-area" class="flex-grow container mx-auto px-6 max-w-7xl pt-24 pb-32 overflow-y-auto scroll-smooth no-scrollbar">
+        
+        <div id="search-container" class="hidden w-full mb-8 animate__animated animate__fadeInDown">
+            <form id="search-form" class="relative group w-full max-w-2xl mx-auto">
+                <input type="text" id="search-input" placeholder="Cari lagu atau artis..." 
+                    class="w-full pl-6 pr-14 py-4 bg-brand-surface border border-brand-border focus:border-brand-red/50 rounded-2xl text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-red/50 transition-all shadow-lg" autocomplete="off">
+                <button type="submit" id="search-icon-wrapper" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-brand-red transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+            </form>
+        </div>
 
-                <div class="flex items-center gap-8 mb-8 px-2 border-b border-white/5 pb-4 justify-center md:justify-start">
-                    <button id="lib-tab-liked" class="text-white font-medium text-base border-b border-white pb-1 transition-all">Liked Songs</button>
-                    <button id="lib-tab-playlists" class="text-gray-500 font-medium text-base pb-1 hover:text-white transition-all border-b border-transparent">Playlists</button>
-                    <button id="btn-create-playlist" class="hidden ml-auto text-xs bg-white/5 hover:bg-white/10 border border-white/5 px-4 py-2 rounded-full transition-all flex items-center gap-2">
-                        <span>+</span> New
+        <div class="relative min-h-[500px]">
+            
+            <div id="explore-area" class="animate__animated animate__fadeIn">
+                <header class="text-center mb-12">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface border border-brand-border text-xs font-medium text-zinc-400 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
+                        Immersive Audio Player
+                    </span>
+                    <h1 id="greeting-text" class="text-4xl md:text-6xl font-bold text-white tracking-tight mb-4">
+                        Discover Your <br class="hidden md:block" /> <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500">Sonic Universe.</span>
+                    </h1>
+                </header>
+
+                <div id="quick-picks-container" class="mb-12 hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-white border-l-4 border-brand-red pl-3">Quick Picks</h3>
+                    </div>
+                    <div id="quick-picks-list" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3 mb-12">
+                    <button onclick="triggerSearch('lagu galau estetik', this)" class="mood-btn group px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-brand-surface border border-brand-border text-zinc-400 hover:text-white hover:border-zinc-600 hover:bg-brand-border">
+                        <span class="mr-2 opacity-50 group-hover:opacity-100">🌧️</span> Melancholy
+                    </button>
+                    <button onclick="triggerSearch('lagu happy mood booster', this)" class="mood-btn group px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-brand-surface border border-brand-border text-zinc-400 hover:text-white hover:border-zinc-600 hover:bg-brand-border">
+                        <span class="mr-2 opacity-50 group-hover:opacity-100">⚡</span> Energy
+                    </button>
+                    <button onclick="triggerSearch('lofi hip hop study', this)" class="mood-btn group px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-brand-surface border border-brand-border text-zinc-400 hover:text-white hover:border-zinc-600 hover:bg-brand-border">
+                        <span class="mr-2 opacity-50 group-hover:opacity-100">🎧</span> Focus
+                    </button>
+                </div>
+            </div>
+
+            <div id="message-area" class="text-center text-sm font-medium text-zinc-500 py-12 hidden animate__animated animate__fadeIn"></div>
+
+            <div id="results-area" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8 animate__animated animate__fadeIn"></div>
+
+            <div id="library-area" class="hidden w-full animate__animated animate__fadeIn">
+                <div class="flex justify-center gap-4 mb-10">
+                    <button id="lib-tab-liked" class="text-white font-bold text-lg border-b-2 border-brand-red pb-1 transition-all">Favorites</button>
+                    <button id="lib-tab-playlists" class="text-zinc-500 font-bold text-lg pb-1 hover:text-white transition-all border-b-2 border-transparent hover:border-zinc-700">Playlists</button>
+                </div>
+                
+                <div class="flex justify-end mb-6">
+                    <button id="btn-create-playlist" class="hidden px-4 py-2 rounded-lg bg-zinc-800 text-white text-xs font-bold hover:bg-brand-red transition-colors flex items-center gap-2">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        NEW PLAYLIST
                     </button>
                 </div>
 
                 <div id="lib-content-liked" class="w-full">
-                    <div id="library-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                    <div id="empty-library-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full opacity-60">
-                        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 text-gray-500">
-                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        </div>
-                        <p class="text-gray-500 text-sm">No favorites yet.</p>
+                    <div id="library-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                    <div id="empty-library-msg" class="hidden text-center py-20">
+                        <p class="text-zinc-600">Belum ada lagu yang disukai.</p>
                     </div>
                 </div>
 
                 <div id="lib-content-playlists" class="hidden w-full">
-                    <div id="playlist-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                    <div id="empty-playlist-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full opacity-60">
-                         <p class="text-gray-500 text-sm">Create your first collection.</p>
+                    <div id="playlist-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                    <div id="empty-playlist-msg" class="hidden text-center py-20">
+                        <p class="text-zinc-600">Belum ada playlist.</p>
                     </div>
                 </div>
 
-                <div id="playlist-view" class="hidden w-full animate-fade-in absolute top-0 left-0 bg-[#0a0a0a] z-20 min-h-full pb-20">
-                     <div class="flex items-center mb-6 pt-4 px-2">
-                         <button onclick="closePlaylistView()" class="text-gray-500 hover:text-white flex items-center gap-2 text-sm transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path></svg>
-                            Back
-                         </button>
-                    </div>
+                <div id="playlist-view" class="hidden absolute top-0 left-0 w-full min-h-full bg-brand-bg z-20 animate__animated animate__fadeInRight">
+                    <button onclick="closePlaylistView()" class="mb-6 flex items-center gap-2 text-zinc-400 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Back to Library
+                    </button>
 
-                    <div class="flex flex-col md:flex-row gap-8 mb-10 items-end px-2">
-                        <div class="relative w-40 h-40 md:w-56 md:h-56 rounded-xl overflow-hidden shadow-2xl shrink-0 bg-white/5">
+                    <div class="flex flex-col md:flex-row gap-8 mb-12 items-end bg-brand-surface p-6 rounded-2xl border border-brand-border">
+                        <div class="w-40 h-40 md:w-56 md:h-56 shrink-0 rounded-xl overflow-hidden border border-brand-border shadow-2xl">
                             <img id="view-pl-cover" src="" class="w-full h-full object-cover">
                         </div>
-                        <div class="flex flex-col justify-end h-full gap-1 w-full pb-2">
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Collection</span>
-                            <h2 id="view-pl-name" class="text-3xl md:text-5xl font-light text-white leading-tight">Playlist</h2>
-                            <p id="view-pl-count" class="text-gray-500 text-xs font-medium mb-6 mt-1">0 songs</p>
-
-                            <div class="flex items-center gap-4">
-                                <button id="btn-play-playlist" class="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                                    <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <div class="flex flex-col gap-2 w-full">
+                            <span class="text-brand-red text-xs font-bold tracking-widest uppercase">Playlist</span>
+                            <h2 id="view-pl-name" class="text-3xl md:text-5xl font-bold text-white">Name</h2>
+                            <p id="view-pl-count" class="text-zinc-500 text-sm">0 Songs</p>
+                            <div class="flex gap-4 mt-4">
+                                <button id="btn-play-playlist" class="w-12 h-12 rounded-full bg-brand-red text-white flex items-center justify-center hover:bg-brand-hover shadow-lg shadow-brand-red/20 transition-all">
+                                    <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                 </button>
-                                <button id="btn-delete-playlist" class="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center text-gray-500 hover:text-red-400 hover:border-red-400/20 transition-all">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <button id="btn-delete-playlist" class="w-12 h-12 rounded-full border border-brand-border text-zinc-400 flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    <div id="view-pl-songs" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                     <div id="empty-view-pl-msg" class="hidden flex flex-col items-center justify-center mt-10 text-center w-full">
-                        <p class="text-gray-500 text-sm">Empty collection.</p>
-                    </div>
+                    <div id="view-pl-songs" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
                 </div>
             </div>
 
-            <div id="history-area" class="hidden pb-24 animate-fade-in">
-                <div class="flex items-center justify-between mb-8 px-2 border-b border-white/5 pb-4">
-                    <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider">Recently Played</h3>
-                    <button onclick="clearHistory()" class="text-[10px] text-gray-500 hover:text-white uppercase tracking-widest transition-colors">Clear</button>
+            <div id="history-area" class="hidden w-full animate__animated animate__fadeIn">
+                <div class="flex justify-between items-center mb-8 border-b border-brand-border pb-4">
+                    <h3 class="text-xl font-bold text-white">Recently Played</h3>
+                    <button onclick="clearHistory()" class="text-xs text-brand-red hover:text-white font-bold uppercase">Clear History</button>
                 </div>
-                <div id="history-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                <div id="empty-history-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full opacity-60">
-                    <p class="text-gray-500 text-sm">No history available.</p>
-                </div>
+                <div id="history-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                <div id="empty-history-msg" class="hidden text-center py-20 text-zinc-600">No history found.</div>
             </div>
 
         </div>
     </main>
 
-    <div id="playlist-modal" class="fixed inset-0 z-[80] bg-[#0a0a0a]/80 backdrop-blur-md hidden flex items-center justify-center animate-fade-in">
-        <div class="bg-[#121212] border border-white/10 p-8 rounded-3xl w-80 shadow-2xl transform scale-100 transition-all animate-modal-in">
-            <h3 class="text-lg font-light text-white mb-6 text-center">New Playlist</h3>
-            <input id="playlist-name-input" type="text" placeholder="Name..." class="w-full bg-transparent border-b border-white/10 px-2 py-3 text-white focus:outline-none focus:border-white/50 transition-colors mb-8 text-center placeholder-gray-600">
-            <div class="flex justify-center gap-6">
-                <button id="close-playlist-modal" class="px-4 py-2 text-xs text-gray-500 hover:text-white transition-colors">CANCEL</button>
-                <button id="save-playlist-btn" class="px-6 py-2 text-xs bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors">CREATE</button>
+    <div id="playlist-modal" class="fixed inset-0 z-[80] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center animate__animated animate__fadeIn">
+        <div class="bg-brand-surface border border-brand-border p-6 rounded-2xl w-80 shadow-2xl">
+            <h3 class="text-lg font-bold text-white mb-4">Create Playlist</h3>
+            <input id="playlist-name-input" type="text" placeholder="Playlist Name" class="w-full bg-brand-bg border border-brand-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-red mb-6">
+            <div class="flex justify-end gap-3">
+                <button id="close-playlist-modal" class="px-4 py-2 text-sm text-zinc-500 hover:text-white">Cancel</button>
+                <button id="save-playlist-btn" class="px-4 py-2 text-sm bg-brand-red text-white font-bold rounded-lg hover:bg-brand-hover">Create</button>
             </div>
         </div>
     </div>
 
-    <div id="add-to-playlist-modal" class="fixed inset-0 z-[90] bg-[#0a0a0a]/80 backdrop-blur-md hidden flex items-center justify-center animate-fade-in">
-        <div class="bg-[#121212] border border-white/10 p-6 rounded-3xl w-80 shadow-2xl transform scale-100 transition-all animate-modal-in max-h-[70vh] flex flex-col">
-            <h3 class="text-sm font-medium mb-6 text-gray-400 text-center uppercase tracking-widest">Save to</h3>
-            <div id="select-playlist-list" class="flex flex-col gap-2 overflow-y-auto min-h-[100px] mb-4 pr-1"></div>
-            <button id="close-select-modal" class="w-full py-4 text-xs text-gray-600 hover:text-white transition-colors border-t border-white/5">CLOSE</button>
+    <div id="add-to-playlist-modal" class="fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center animate__animated animate__fadeIn">
+        <div class="bg-brand-surface border border-brand-border p-6 rounded-2xl w-80 shadow-2xl max-h-[70vh] flex flex-col">
+            <h3 class="text-lg font-bold text-white mb-4">Save to Playlist</h3>
+            <div id="select-playlist-list" class="flex flex-col gap-2 overflow-y-auto mb-4"></div>
+            <button id="close-select-modal" class="w-full py-3 text-sm text-zinc-500 hover:text-white border-t border-brand-border mt-auto">Close</button>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/5 text-white px-6 py-3 rounded-full shadow-2xl font-medium text-xs hidden z-[100] items-center gap-3 animate-toast-in">
-        <div class="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-surface border border-brand-border text-white px-6 py-3 rounded-full shadow-2xl font-medium text-sm hidden z-[100] items-center gap-2 animate__animated animate__fadeInUp">
+        <span class="w-2 h-2 rounded-full bg-brand-red"></span>
         <span id="toast-msg">Notification</span>
     </div>
 
-    <div id="mini-player" class="fixed bottom-6 left-4 right-4 z-50 bg-[#141414]/90 backdrop-blur-2xl border border-white/5 rounded-2xl p-3 flex items-center justify-between shadow-2xl transform translate-y-[150%] transition-transform duration-500 cursor-pointer hidden hover:bg-[#1a1a1a] max-w-5xl mx-auto">
-        <div class="flex items-center gap-4 overflow-hidden flex-1">
-            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 shrink-0 relative">
-                <img id="mini-cover" src="" class="w-full h-full object-cover opacity-80">
+    <div id="mini-player" class="fixed bottom-6 left-4 right-4 z-50 bg-brand-surface/90 backdrop-blur-xl border border-brand-border rounded-xl p-3 flex items-center justify-between shadow-2xl transform translate-y-[150%] transition-transform duration-500 cursor-pointer hidden max-w-4xl mx-auto hover:border-brand-red/30">
+        <div class="flex items-center gap-3 overflow-hidden flex-1">
+            <div class="w-12 h-12 rounded-lg overflow-hidden bg-brand-bg shrink-0 relative">
+                <img id="mini-cover" src="" class="w-full h-full object-cover">
             </div>
             <div class="flex flex-col overflow-hidden w-full pr-4">
-                <h4 id="mini-title" class="text-sm font-medium text-white truncate">Title</h4>
-                <p id="mini-artist" class="text-[10px] text-gray-500 truncate uppercase tracking-wider">Artist</p>
+                <h4 id="mini-title" class="text-sm font-bold text-white truncate">Song Title</h4>
+                <p id="mini-artist" class="text-xs text-zinc-500 truncate">Artist Name</p>
             </div>
         </div>
         <div class="flex items-center gap-4 pr-2">
-            <button id="mini-like-btn" class="text-gray-500 hover:text-white transition-colors focus:outline-none">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <button id="mini-play-btn" class="text-white hover:text-gray-300 focus:outline-none p-1">
-                <svg id="mini-play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                <svg id="mini-pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            <button id="mini-like-btn" class="text-zinc-500 hover:text-brand-red transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+            <button id="mini-play-btn" class="text-white hover:text-brand-red focus:outline-none">
+                <svg id="mini-play-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg id="mini-pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
             </button>
         </div>
     </div>
 
-    <div id="player-overlay" class="fixed inset-0 z-[60] bg-[#0a0a0a] flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] translate-y-[100%]">
-        <div class="absolute inset-0 z-0 overflow-hidden opacity-20 pointer-events-none">
-            <img id="player-bg-image" src="" class="w-full h-full object-cover blur-[100px] scale-125 grayscale">
-            <div class="absolute inset-0 bg-[#0a0a0a]/60"></div>
-        </div>
-
-        <div class="relative z-20 w-full px-6 py-8 flex justify-between items-center">
-            <button id="close-player-btn" class="p-2 rounded-full hover:bg-white/5 transition-all text-gray-400 hover:text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"></path></svg>
+    <div id="player-overlay" class="fixed inset-0 z-[60] bg-brand-bg flex flex-col transition-transform duration-500 ease-in-out translate-y-[100%]">
+        
+        <div class="relative z-20 w-full px-6 py-6 flex justify-between items-center border-b border-brand-border bg-brand-bg/90 backdrop-blur-md">
+            <button id="close-player-btn" class="p-2 rounded-full bg-brand-surface border border-brand-border text-zinc-400 hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-            <span class="text-[10px] font-medium tracking-[0.3em] uppercase text-gray-500">Playing</span>
-
+            <span class="text-xs font-bold tracking-widest uppercase text-brand-red">Now Playing</span>
             <div class="relative">
-                <button id="options-btn" class="p-2 rounded-full hover:bg-white/5 transition-all text-gray-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-                </button>
-                <div id="options-menu" class="absolute right-0 top-full mt-2 w-56 bg-[#121212] border border-white/5 rounded-xl p-2 flex flex-col hidden origin-top-right animate-menu-open z-[70] shadow-2xl">
-                    <button id="menu-add-playlist-btn" class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-3 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
-                        Add to Playlist
-                    </button>
-                    <button id="menu-share-btn" class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-3 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                        Share
-                    </button>
-                    <a id="menu-download-btn" href="#" download class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-3 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        Download
-                    </a>
+                <button id="options-btn" class="p-2 text-zinc-400 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg></button>
+                <div id="options-menu" class="absolute right-0 top-full mt-2 w-48 bg-brand-surface border border-brand-border rounded-xl p-1 hidden z-[70] shadow-xl">
+                    <button id="menu-add-playlist-btn" class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/5 text-sm text-zinc-300 hover:text-white flex items-center gap-2">Add to Playlist</button>
+                    <button id="menu-share-btn" class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/5 text-sm text-zinc-300 hover:text-white flex items-center gap-2">Share</button>
+                    <a id="menu-download-btn" href="#" download class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/5 text-sm text-zinc-300 hover:text-white flex items-center gap-2">Download</a>
                 </div>
             </div>
         </div>
 
-        <div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-6 pb-6">
-            <div class="flex flex-col md:flex-row items-center w-full gap-8 md:gap-20">
-                <div class="w-full md:w-1/2 flex justify-center">
-                    <div class="relative w-[70vw] h-[70vw] max-w-[320px] max-h-[320px] md:w-[400px] md:h-[400px]">
-                        <img id="player-cover" src="" class="relative w-full h-full object-cover rounded-2xl shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] z-10">
+        <div class="flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-6 overflow-y-auto">
+            <div class="w-full max-w-xs md:max-w-sm aspect-square bg-brand-surface rounded-2xl border border-brand-border shadow-2xl mb-8 relative group overflow-hidden">
+                <img id="player-cover" src="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+
+            <div class="text-center w-full mb-8">
+                <div id="marquee-wrapper" class="marquee-container w-full max-w-md mx-auto mb-2">
+                    <h2 id="player-title" class="text-2xl md:text-3xl font-bold text-white marquee-content w-max">Title</h2>
+                </div>
+                <p id="player-artist" class="text-lg text-brand-red font-medium">Artist</p>
+            </div>
+
+            <div class="w-full max-w-lg mb-8 group">
+                <div class="relative cursor-pointer h-2 flex items-center" id="progress-container">
+                    <div class="w-full h-1 bg-brand-border rounded-full overflow-hidden group-hover:h-2 transition-all">
+                        <div id="progress-fill" class="h-full bg-white w-0 rounded-full relative"></div>
                     </div>
                 </div>
-
-                <div class="w-full md:w-1/2 flex flex-col justify-center mt-6 md:mt-0">
-                    <div class="text-center md:text-left mb-8 overflow-hidden w-full px-2">
-                        <div id="marquee-wrapper" class="marquee-container w-full">
-                            <h2 id="player-title" class="text-2xl md:text-4xl font-light text-white leading-tight mb-2 marquee-content w-max">Title</h2>
-                        </div>
-                        <p id="player-artist" class="text-sm text-gray-500 font-medium tracking-wider uppercase truncate">Artist</p>
-                    </div>
-
-                    <div class="w-full mb-8 group px-2">
-                        <div class="relative cursor-pointer h-1.5 flex items-center" id="progress-container">
-                            <div class="w-full h-full bg-white/10 rounded-full overflow-hidden">
-                                <div id="progress-fill" class="h-full bg-white w-0 rounded-full relative"></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between mt-3 text-[10px] font-mono text-gray-500">
-                            <span id="current-time">0:00</span>
-                            <span id="duration">0:00</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-center md:justify-start gap-10 mb-10">
-                        <button id="loop-btn" class="text-gray-600 hover:text-white transition-colors relative">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            <div id="loop-dot" class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full hidden"></div>
-                        </button>
-                        <button id="prev-btn" class="text-gray-400 hover:text-white transition-colors">
-                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-                        </button>
-                        <button id="play-pause-btn" class="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
-                            <svg id="play-icon" class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                        </button>
-                        <button id="next-btn" class="text-gray-400 hover:text-white transition-colors">
-                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-                        </button>
-
-                        <button id="full-like-btn" class="text-gray-600 hover:text-white transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center gap-3 w-full max-w-[200px] mx-auto md:mx-0 opacity-50 hover:opacity-100 transition-opacity">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.75" class="w-full">
-                    </div>
+                <div class="flex justify-between mt-2 text-xs font-mono text-zinc-500">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
                 </div>
             </div>
+
+            <div class="flex items-center justify-center gap-8 mb-8">
+                <button id="loop-btn" class="text-zinc-600 hover:text-white transition-colors relative"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg><div id="loop-dot" class="absolute -top-1 -right-1 w-1.5 h-1.5 bg-brand-red rounded-full hidden"></div></button>
+                <button id="prev-btn" class="text-zinc-400 hover:text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+                <button id="play-pause-btn" class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    <svg id="play-icon" class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button id="next-btn" class="text-zinc-400 hover:text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+                <button id="full-like-btn" class="text-zinc-600 hover:text-brand-red transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+            </div>
+            
+            <div class="flex items-center gap-3 w-full max-w-[200px] opacity-70 hover:opacity-100 transition-opacity">
+                <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.75" class="w-full">
+            </div>
+        </div>
+        
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-20">
+             <img id="player-bg-image" src="" class="w-full h-full object-cover blur-3xl">
         </div>
     </div>
 
     <audio id="audio-player" class="hidden"></audio>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
