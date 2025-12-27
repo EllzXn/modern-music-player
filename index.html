@@ -3,30 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZTune - Soft Luxury</title>
-
-    <link rel="shortcut icon" href="https://files.catbox.moe/s248au.jpg" type="image/x-icon"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>ZTune - Luxury Edition</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+    <link rel="shortcut icon" href="https://files.catbox.moe/s248au.jpg" type="image/x-icon"/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        background: '#0a0a0c', /* Deep Charcoal, lebih soft dari hitam */
-                        surface: '#161618',
-                        soft: '#252529',
-                        primary: { 500: '#ffffff', 600: '#e0e0e0' } /* Aksen Putih/Silver Mewah */
+                        background: '#050505', 
+                        surface: '#0f0f0f',
+                        surfaceLight: '#1a1a1a',
+                        gold: { 
+                            400: '#D4AF37', 
+                            500: '#C5A028',
+                        },
+                        subtle: '#888888'
                     },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
                     },
                     animation: {
-                        'fade-in': 'fadeIn 0.8s ease-out forwards',
-                        'slide-up': 'slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
@@ -36,291 +43,292 @@
             }
         }
     </script>
+
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-background text-white h-screen w-full overflow-hidden flex flex-col relative selection:bg-white selection:text-black">
+<body class="bg-background text-white h-screen w-full overflow-hidden flex flex-col selection:bg-gold-400 selection:text-black">
 
-    <div class="fixed inset-0 pointer-events-none z-0">
-        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-white/5 rounded-full blur-[150px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[150px]"></div>
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gold-400/5 blur-[120px]"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-900/10 blur-[100px]"></div>
     </div>
 
-    <header id="main-header" class="fixed top-6 left-6 right-6 z-50 flex justify-between items-center transition-all duration-500">
-        
-        <div class="flex items-center gap-3 bg-surface/80 backdrop-blur-xl border border-white/5 px-4 py-3 rounded-full shadow-lg" id="traffic-light-container">
-            <button id="nav-btn-red" class="w-8 h-8 rounded-full bg-transparent hover:bg-white/10 flex items-center justify-center transition-all">
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            </button>
-            <div id="nav-btn-yellow" class="hidden"></div> <button id="nav-btn-green" class="w-8 h-8 rounded-full bg-transparent hover:bg-white/10 flex items-center justify-center transition-all">
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </button>
+    <header id="main-header" class="fixed top-0 left-0 right-0 px-6 py-6 flex justify-between items-center z-50 transition-all duration-500">
+        <div class="flex items-center gap-4">
+            <h1 class="font-serif text-2xl font-bold tracking-wider text-white">ZTune<span class="text-gold-400">.</span></h1>
         </div>
 
-        <div class="absolute left-1/2 transform -translate-x-1/2 flex bg-surface/50 rounded-full p-1.5 backdrop-blur-xl border border-white/5 shadow-2xl">
-            <button id="tab-search" class="nav-tab active">Search</button>
-            <button id="tab-library" class="nav-tab">Library</button>
-            <button id="tab-history" class="nav-tab">History</button>
-        </div>
+        <nav class="absolute left-1/2 transform -translate-x-1/2 flex bg-white/5 border border-white/5 rounded-full p-1 backdrop-blur-md">
+            <button id="tab-search" class="nav-pill active">Search</button>
+            <button id="tab-library" class="nav-pill">Library</button>
+            <button id="tab-history" class="nav-pill">History</button>
+        </nav>
 
-        <button id="search-toggle-btn" class="w-12 h-12 rounded-full bg-surface/80 backdrop-blur-xl border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all shadow-lg">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <button id="search-toggle-btn" class="p-2 rounded-full text-gray-400 hover:text-gold-400 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </button>
     </header>
 
-    <main id="content-area" class="flex-1 w-full max-w-5xl mx-auto flex flex-col relative z-10 overflow-y-auto px-6 pb-28 pt-32 no-scrollbar scroll-smooth">
+    <main id="content-area" class="flex-1 w-full max-w-7xl mx-auto flex flex-col relative z-10 overflow-y-auto px-4 md:px-8 pb-24 pt-28 no-scrollbar scroll-smooth">
 
-        <div id="search-container" class="hidden w-full py-2 animate-slide-up shrink-0 mb-8">
+        <div id="search-container" class="hidden w-full py-6 animate-slide-up shrink-0">
             <form id="search-form" class="relative group w-full max-w-2xl mx-auto">
-                <input type="text" id="search-input" placeholder="Type to search..." 
-                    class="w-full pl-14 pr-6 py-4 bg-surface border border-white/5 focus:border-white/20 rounded-2xl text-lg text-white font-light placeholder-gray-600 focus:outline-none focus:ring-0 transition-all shadow-xl" autocomplete="off">
+                <input type="text" id="search-input" placeholder="Search for tracks..." 
+                    class="w-full pl-12 pr-4 py-4 bg-surface/50 backdrop-blur-xl border border-white/10 focus:border-gold-400/50 rounded-full text-lg text-white placeholder-gray-600 focus:outline-none focus:ring-0 transition-all shadow-2xl" autocomplete="off">
                 <div id="search-icon-wrapper" class="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
             </form>
         </div>
 
         <div class="flex-1 mt-2 px-1 relative min-h-[500px]">
-
+            
             <div id="explore-area" class="animate-fade-in pb-10 transition-opacity duration-300">
-                <div id="greeting-container" class="mt-4 mb-12 text-center flex flex-col justify-center">
-                    <span class="text-gray-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Personal Audio</span>
-                    <h2 id="greeting-text" class="text-4xl md:text-5xl font-light text-white mb-2 tracking-wide">Pure Focus.</h2>
+                <div id="greeting-container" class="mt-8 mb-12 text-center flex flex-col justify-center">
+                    <span class="text-gold-400 text-[10px] font-bold tracking-[0.4em] uppercase mb-4 animate-pulse">Welcome Back</span>
+                    <h2 id="greeting-text" class="font-serif text-4xl md:text-6xl text-white mb-2 tracking-tight">Sonic Luxury.</h2>
                 </div>
 
-                <div id="quick-picks-container" class="mb-12 hidden">
-                    <div class="flex items-center gap-2 mb-6 px-1 border-b border-white/5 pb-2">
-                        <h3 class="text-sm font-medium uppercase tracking-widest text-gray-400">Quick Picks</h3>
-                    </div>
-                    <div id="quick-picks-list" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
-                </div>
-
-                <div class="mb-12">
-                    <h3 class="text-sm font-medium uppercase tracking-widest text-gray-400 mb-6 px-1">Atmosphere</h3>
+                <div class="mb-12 max-w-5xl mx-auto">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <button onclick="triggerSearch('lagu galau estetik', this)" class="mood-card">
-                            <span class="mood-icon text-2xl opacity-80">🌧️</span>
-                            <span class="font-medium text-sm text-gray-300">Melancholy</span>
+                        <button onclick="triggerSearch('lagu galau estetik', this)" class="mood-card group">
+                            <span class="mood-icon text-2xl mb-2 block group-hover:scale-110 transition-transform duration-500">🌧️</span>
+                            <span class="font-serif text-lg text-gray-300 group-hover:text-gold-400 transition-colors">Melancholy</span>
                         </button>
-                        <button onclick="triggerSearch('lagu happy chill', this)" class="mood-card">
-                            <span class="mood-icon text-2xl opacity-80">⚡</span>
-                            <span class="font-medium text-sm text-gray-300">Energy</span>
+                        <button onclick="triggerSearch('lagu happy chill', this)" class="mood-card group">
+                            <span class="mood-icon text-2xl mb-2 block group-hover:scale-110 transition-transform duration-500">✨</span>
+                            <span class="font-serif text-lg text-gray-300 group-hover:text-gold-400 transition-colors">Euphoria</span>
                         </button>
-                        <button onclick="triggerSearch('lagu chill santai', this)" class="mood-card">
-                            <span class="mood-icon text-2xl opacity-80">☕</span>
-                            <span class="font-medium text-sm text-gray-300">Chill</span>
+                        <button onclick="triggerSearch('lofi jazz study', this)" class="mood-card group">
+                            <span class="mood-icon text-2xl mb-2 block group-hover:scale-110 transition-transform duration-500">☕</span>
+                            <span class="font-serif text-lg text-gray-300 group-hover:text-gold-400 transition-colors">Focus</span>
                         </button>
-                        <button onclick="triggerSearch('lofi study', this)" class="mood-card">
-                            <span class="mood-icon text-2xl opacity-80">🎧</span>
-                            <span class="font-medium text-sm text-gray-300">Focus</span>
+                        <button onclick="triggerSearch('night drive playlist', this)" class="mood-card group">
+                            <span class="mood-icon text-2xl mb-2 block group-hover:scale-110 transition-transform duration-500">🌃</span>
+                            <span class="font-serif text-lg text-gray-300 group-hover:text-gold-400 transition-colors">Midnight</span>
                         </button>
                     </div>
+                </div>
+
+                <div id="quick-picks-container" class="hidden max-w-5xl mx-auto">
+                    <h3 class="font-serif text-2xl text-white mb-6">Quick Picks</h3>
+                    <div id="quick-picks-list" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
                 </div>
             </div>
 
-            <div id="message-area" class="text-center text-xs uppercase tracking-widest text-gray-500 py-10 transition-all hidden"></div>
+            <div id="message-area" class="text-center text-xs font-medium text-gray-500 py-10 transition-all hidden tracking-widest uppercase"></div>
 
             <div id="results-area" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-24 animate-fade-in"></div>
 
             <div id="library-area" class="hidden pb-24 animate-fade-in w-full">
-                <div class="flex items-center gap-8 mb-8 px-2 border-b border-white/5 pb-4 justify-center">
-                    <button id="lib-tab-liked" class="text-lg font-light pb-2 transition-all border-b border-white text-white">Favorites</button>
-                    <button id="lib-tab-playlists" class="text-lg font-light text-gray-500 pb-2 hover:text-white transition-all border-b border-transparent">Collections</button>
-                </div>
-                
-                <div class="flex justify-end mb-4">
-                    <button id="btn-create-playlist" class="hidden text-xs bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200 transition-all font-medium">
-                        + New Collection
+                <div class="flex items-center gap-8 mb-8 border-b border-white/5 pb-4 max-w-5xl mx-auto">
+                    <button id="lib-tab-liked" class="text-xl font-serif text-white border-b border-gold-400 pb-1 transition-all">Favorites</button>
+                    <button id="lib-tab-playlists" class="text-xl font-serif text-gray-500 hover:text-white transition-all pb-1">Collections</button>
+                    <div class="flex-1"></div>
+                    <button id="btn-create-playlist" class="hidden text-[10px] border border-white/10 hover:border-gold-400 hover:text-gold-400 px-4 py-2 rounded-full transition-all uppercase tracking-wider">
+                        + New
                     </button>
                 </div>
 
                 <div id="lib-content-liked" class="w-full">
                     <div id="library-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                    <div id="empty-library-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full">
-                        <p class="text-gray-600 font-light text-sm">No favorites yet.</p>
+                    <div id="empty-library-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full opacity-50">
+                        <span class="font-serif text-2xl text-gray-600 mb-2">Empty Void</span>
+                        <p class="text-xs uppercase tracking-widest text-gray-700">Your favorite tracks will appear here</p>
                     </div>
                 </div>
 
                 <div id="lib-content-playlists" class="hidden w-full">
                     <div id="playlist-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                    <div id="empty-playlist-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full">
-                        <p class="text-gray-600 font-light text-sm">No collections created.</p>
+                    <div id="empty-playlist-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full opacity-50">
+                        <span class="font-serif text-2xl text-gray-600 mb-2">No Collections</span>
+                        <p class="text-xs uppercase tracking-widest text-gray-700">Create a playlist to get started</p>
                     </div>
                 </div>
 
                 <div id="playlist-view" class="hidden w-full animate-fade-in absolute top-0 left-0 bg-background z-20 min-h-full pb-20">
-                     <div class="flex items-center mb-4 md:hidden pt-4 px-2">
-                         <button onclick="closePlaylistView()" class="text-gray-400 hover:text-white flex items-center gap-2 text-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                            Back
+                     <div class="flex items-center mb-6 pt-4">
+                         <button onclick="closePlaylistView()" class="text-gray-400 hover:text-white flex items-center gap-2 text-xs uppercase tracking-widest transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Return
                          </button>
                     </div>
 
-                    <div class="flex flex-col md:flex-row gap-8 mb-10 items-end px-2">
-                        <div class="relative w-48 h-48 rounded-2xl overflow-hidden bg-surface shadow-2xl shrink-0">
-                            <img id="view-pl-cover" src="" class="w-full h-full object-cover opacity-80">
+                    <div class="flex flex-col md:flex-row gap-8 mb-12 items-end">
+                        <div class="relative w-48 h-48 md:w-64 md:h-64 shadow-2xl shrink-0 group">
+                            <img id="view-pl-cover" src="" class="w-full h-full object-cover shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
+                            <div class="absolute inset-0 border border-white/10"></div>
                         </div>
-                        <div class="flex flex-col justify-end h-full w-full">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Collection</span>
-                            <h2 id="view-pl-name" class="text-4xl font-light text-white mb-2">Playlist Name</h2>
-                            <p id="view-pl-count" class="text-gray-500 text-sm mb-6">0 songs</p>
+                        <div class="flex flex-col justify-end h-full w-full pb-2">
+                            <span class="text-xs font-bold text-gold-400 uppercase tracking-[0.3em] mb-2">Collection</span>
+                            <h2 id="view-pl-name" class="font-serif text-4xl md:text-6xl text-white leading-none mb-4">Name</h2>
+                            <p id="view-pl-count" class="text-gray-400 text-sm font-medium mb-6">0 Tracks</p>
 
                             <div class="flex items-center gap-4">
-                                <button id="btn-play-playlist" class="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-white/10">
-                                    <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                <button id="btn-play-playlist" class="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center hover:bg-gold-400 transition-colors shadow-lg">
+                                    <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                 </button>
-                                <button id="btn-delete-playlist" class="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center text-gray-400 hover:text-red-400 hover:border-red-400/30 transition-all">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <button id="btn-delete-playlist" class="w-14 h-14 border border-white/10 rounded-full flex items-center justify-center text-gray-400 hover:text-red-400 hover:border-red-400/30 transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </div>
                         </div>
                     </div>
-
                     <div id="view-pl-songs" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                     <div id="empty-view-pl-msg" class="hidden flex flex-col items-center justify-center mt-10 text-center w-full">
-                        <p class="text-gray-600 text-sm">Collection is empty.</p>
-                    </div>
                 </div>
             </div>
 
             <div id="history-area" class="hidden pb-24 animate-fade-in">
-                <div class="flex items-center justify-between mb-8 px-2 border-b border-white/5 pb-4">
-                    <h3 class="text-sm font-medium uppercase tracking-widest text-white">Playback History</h3>
-                    <button onclick="clearHistory()" class="text-xs text-gray-500 hover:text-white uppercase tracking-widest transition-colors">Clear</button>
+                <div class="flex items-center justify-between mb-8 px-2 max-w-5xl mx-auto border-b border-white/5 pb-4">
+                    <h3 class="font-serif text-2xl text-white">Playback History</h3>
+                    <button onclick="clearHistory()" class="text-[10px] text-gray-500 hover:text-white font-bold uppercase tracking-[0.2em] transition-colors">Clear All</button>
                 </div>
                 <div id="history-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
-                <div id="empty-history-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full">
-                    <p class="text-gray-600 text-sm font-light">No history yet.</p>
+                <div id="empty-history-msg" class="hidden flex flex-col items-center justify-center mt-20 text-center w-full opacity-50">
+                    <span class="font-serif text-2xl text-gray-600 mb-2">Silence</span>
+                    <p class="text-xs uppercase tracking-widest text-gray-700">No recent tracks played</p>
                 </div>
             </div>
         </div>
     </main>
 
     <div id="playlist-modal" class="fixed inset-0 z-[80] bg-black/80 backdrop-blur-md hidden flex items-center justify-center animate-fade-in">
-        <div class="bg-surface border border-white/10 p-8 rounded-3xl w-96 transform scale-100 transition-all shadow-2xl">
-            <h3 class="text-lg font-light mb-6 text-white text-center">New Collection</h3>
-            <input id="playlist-name-input" type="text" placeholder="Name..." class="w-full bg-soft border-none rounded-xl px-4 py-4 text-white focus:outline-none focus:ring-1 focus:ring-white/20 transition-colors mb-6 text-center placeholder-gray-600">
-            <div class="flex justify-center gap-4">
-                <button id="close-playlist-modal" class="px-6 py-2 text-sm text-gray-500 hover:text-white transition-colors">Cancel</button>
-                <button id="save-playlist-btn" class="px-6 py-2 text-sm bg-white text-black font-medium rounded-full hover:scale-105 transition-transform">Create</button>
+        <div class="bg-surface border border-white/10 p-8 w-96 transform scale-100 transition-all shadow-2xl">
+            <h3 class="font-serif text-2xl text-white mb-6">New Collection</h3>
+            <input id="playlist-name-input" type="text" placeholder="Collection Name" class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-white focus:outline-none focus:border-gold-400 transition-colors mb-8 text-lg placeholder-gray-600">
+            <div class="flex justify-end gap-6">
+                <button id="close-playlist-modal" class="text-xs uppercase tracking-widest text-gray-500 hover:text-white transition-colors">Cancel</button>
+                <button id="save-playlist-btn" class="text-xs uppercase tracking-widest text-gold-400 hover:text-white transition-colors font-bold">Create</button>
             </div>
         </div>
     </div>
 
     <div id="add-to-playlist-modal" class="fixed inset-0 z-[90] bg-black/80 backdrop-blur-md hidden flex items-center justify-center animate-fade-in">
-        <div class="bg-surface border border-white/10 p-6 rounded-3xl w-80 max-h-[70vh] flex flex-col shadow-2xl">
-            <h3 class="text-md font-light mb-4 text-white text-center">Save to Collection</h3>
-            <div id="select-playlist-list" class="flex flex-col gap-2 overflow-y-auto min-h-[100px] mb-4 pr-1"></div>
-            <button id="close-select-modal" class="w-full py-3 text-sm text-gray-500 hover:text-white border-t border-white/5 transition-colors">Cancel</button>
+        <div class="bg-surface border border-white/10 p-6 w-80 max-h-[70vh] flex flex-col shadow-2xl">
+            <h3 class="font-serif text-lg text-white mb-6 text-center">Add to Collection</h3>
+            <div id="select-playlist-list" class="flex flex-col gap-1 overflow-y-auto min-h-[100px] mb-6 pr-1 custom-scrollbar"></div>
+            <button id="close-select-modal" class="w-full py-3 text-xs uppercase tracking-widest text-gray-500 hover:text-white border-t border-white/10 transition-colors">Cancel</button>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-28 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/5 text-white px-8 py-3 rounded-full shadow-2xl font-light text-sm hidden z-[100] items-center gap-3 animate-slide-up">
-        <span class="w-2 h-2 rounded-full bg-white"></span>
+    <div id="toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 bg-white/5 backdrop-blur-xl border border-white/10 text-white px-6 py-3 rounded-full shadow-2xl text-xs font-bold tracking-widest uppercase hidden z-[100] items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-gold-400"></span>
         <span id="toast-msg">Notification</span>
     </div>
 
-    <div id="mini-player" class="fixed bottom-6 left-6 right-6 z-50 bg-surface/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-2xl transform translate-y-[150%] transition-transform duration-500 cursor-pointer hidden">
-        <div class="flex items-center gap-4 overflow-hidden flex-1">
-            <div class="w-12 h-12 rounded-xl overflow-hidden bg-gray-800 shrink-0 shadow-lg">
-                <img id="mini-cover" src="" class="w-full h-full object-cover opacity-90">
+    <div id="mini-player" class="fixed bottom-6 left-6 right-6 z-50 bg-surface/80 backdrop-blur-xl border border-white/10 p-4 flex items-center justify-between shadow-2xl transform translate-y-[150%] transition-transform duration-500 cursor-pointer hidden max-w-4xl mx-auto rounded-full group hover:border-white/20">
+        <div class="flex items-center gap-4 overflow-hidden flex-1 pl-2">
+            <div class="w-10 h-10 rounded-full overflow-hidden relative">
+                <img id="mini-cover" src="" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 bg-black/10"></div>
             </div>
             <div class="flex flex-col overflow-hidden w-full pr-4">
-                <h4 id="mini-title" class="text-sm font-medium text-white truncate">Title</h4>
-                <p id="mini-artist" class="text-xs text-gray-400 truncate">Artist</p>
+                <h4 id="mini-title" class="text-sm font-medium text-white truncate font-serif tracking-wide">Title</h4>
+                <p id="mini-artist" class="text-[10px] text-gray-400 truncate uppercase tracking-widest">Artist</p>
             </div>
         </div>
-        <div class="flex items-center gap-5 pr-2">
+        <div class="flex items-center gap-6 pr-4">
             <button id="mini-like-btn" class="text-gray-500 hover:text-white transition-colors focus:outline-none">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             </button>
-            <button id="mini-play-btn" class="text-white hover:text-gray-300 focus:outline-none p-1">
+            <button id="mini-play-btn" class="text-white hover:text-gold-400 focus:outline-none transition-colors">
                 <svg id="mini-play-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 <svg id="mini-pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
             </button>
         </div>
     </div>
 
-    <div id="player-overlay" class="fixed inset-0 z-[60] bg-[#0a0a0c] flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.8,0,0.2,1)] translate-y-[100%]">
-        <div class="absolute inset-0 z-0 overflow-hidden opacity-40 pointer-events-none">
-            <img id="player-bg-image" src="" class="w-full h-full object-cover blur-[80px] scale-110">
-            <div class="absolute inset-0 bg-[#0a0a0c]/80"></div>
+    <div id="player-overlay" class="fixed inset-0 z-[60] bg-[#050505] flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.7,0,0.3,1)] translate-y-[100%]">
+        
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <img id="player-bg-image" src="" class="w-full h-full object-cover blur-[80px] scale-125 opacity-30 transition-opacity duration-1000">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]"></div>
+            <div class="absolute inset-0 bg-black/40"></div>
         </div>
 
         <div class="relative z-20 w-full px-8 py-8 flex justify-between items-center">
-            <button id="close-player-btn" class="p-3 rounded-full bg-transparent hover:bg-white/5 transition-all group">
-                <svg class="w-6 h-6 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <button id="close-player-btn" class="p-2 rounded-full hover:bg-white/5 transition-all group">
+                <svg class="w-6 h-6 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-            <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-500">Now Playing</span>
+            <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-gold-400/80">Now Playing</span>
 
             <div class="relative">
-                <button id="options-btn" class="p-3 rounded-full hover:bg-white/5 transition-all text-gray-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                <button id="options-btn" class="p-2 rounded-full hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
                 </button>
-                <div id="options-menu" class="absolute right-0 top-full mt-2 w-56 bg-surface/90 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 hidden origin-top-right animate-menu-open z-[70] shadow-2xl">
-                    <button id="menu-add-playlist-btn" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-sm text-gray-300 flex items-center gap-3 transition-colors">
+                <div id="options-menu" class="absolute right-0 top-full mt-2 w-56 bg-[#121212] border border-white/10 rounded-sm p-1 flex flex-col hidden origin-top-right animate-menu-open z-[70] shadow-2xl">
+                    <button id="menu-add-playlist-btn" class="w-full text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-300 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
                         Add to Collection
                     </button>
-                    <button id="menu-share-btn" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-sm text-gray-300 flex items-center gap-3 transition-colors">
-                        Share Song
+                    <button id="menu-share-btn" class="w-full text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-300 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        Share
                     </button>
-                    <a id="menu-download-btn" href="#" download class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-sm text-gray-300 flex items-center gap-3 transition-colors">
+                    <a id="menu-download-btn" href="#" download class="w-full text-left px-4 py-3 text-xs uppercase tracking-wider text-gray-300 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         Download
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-8 pb-10">
-            <div class="flex flex-col md:flex-row items-center w-full gap-10 md:gap-16">
-                <div class="w-full md:w-1/2 flex justify-center">
-                    <div class="relative w-[70vw] h-[70vw] max-w-[320px] max-h-[320px] md:w-[400px] md:h-[400px]">
-                        <img id="player-cover" src="" class="relative w-full h-full object-cover rounded-[2rem] shadow-[0_40px_60px_-20px_rgba(0,0,0,0.5)] z-10">
+        <div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-6 pb-10">
+            <div class="flex flex-col md:flex-row items-center w-full gap-12 md:gap-24">
+                
+                <div class="w-full md:w-1/2 flex justify-center perspective-1000">
+                    <div class="relative w-[75vw] h-[75vw] max-w-[350px] max-h-[350px] md:w-[450px] md:h-[450px]">
+                        <img id="player-cover" src="" class="relative w-full h-full object-cover shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)] z-10 transform transition-transform duration-700 hover:scale-[1.02]">
+                        <div class="absolute inset-0 border border-white/10 z-20 pointer-events-none"></div>
                     </div>
                 </div>
 
-                <div class="w-full md:w-1/2 flex flex-col justify-center mt-6 md:mt-0">
-                    <div class="text-center md:text-left mb-8 overflow-hidden w-full">
+                <div class="w-full md:w-1/2 flex flex-col justify-center mt-8 md:mt-0">
+                    <div class="text-center md:text-left mb-10 overflow-hidden w-full">
                         <div id="marquee-wrapper" class="marquee-container w-full">
-                            <h2 id="player-title" class="text-3xl md:text-4xl font-light text-white leading-tight mb-2 marquee-content w-max">Song Title</h2>
+                            <h2 id="player-title" class="font-serif text-3xl md:text-5xl text-white leading-tight mb-3 marquee-content w-max">Song Title</h2>
                         </div>
-                        <p id="player-artist" class="text-lg text-gray-500 font-normal truncate">Artist Name</p>
+                        <p id="player-artist" class="text-sm text-gold-400 font-bold tracking-[0.2em] uppercase truncate">Artist Name</p>
                     </div>
 
                     <div class="w-full mb-10 group">
                         <div class="relative cursor-pointer h-2 flex items-center" id="progress-container">
-                            <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                                <div id="progress-fill" class="h-full bg-white w-0 rounded-full relative shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
+                            <div class="w-full h-[2px] bg-white/10 overflow-hidden group-hover:h-[4px] transition-all">
+                                <div id="progress-fill" class="h-full bg-white w-0 relative shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                                    <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex justify-between mt-3 text-xs font-medium text-gray-500 font-mono tracking-widest">
+                        <div class="flex justify-between mt-3 text-[10px] font-mono text-gray-500 tracking-wider">
                             <span id="current-time">0:00</span>
                             <span id="duration">0:00</span>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-center md:justify-start gap-10 mb-10">
+                    <div class="flex items-center justify-center md:justify-start gap-10 mb-12">
                         <button id="loop-btn" class="text-gray-600 hover:text-white transition-colors relative">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            <div id="loop-dot" class="absolute -top-1 -right-1 w-1.5 h-1.5 bg-white rounded-full hidden"></div>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <div id="loop-dot" class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-gold-400 rounded-full hidden"></div>
                         </button>
-                        <button id="prev-btn" class="text-gray-400 hover:text-white transition-colors">
+                        <button id="prev-btn" class="text-gray-400 hover:text-white transition-colors hover:scale-110 transform duration-300">
                              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                         </button>
-                        <button id="play-pause-btn" class="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shadow-2xl">
+                        <button id="play-pause-btn" class="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center hover:bg-gold-400 hover:scale-105 active:scale-95 transition-all duration-500 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
                             <svg id="play-icon" class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                         </button>
-                        <button id="next-btn" class="text-gray-400 hover:text-white transition-colors">
+                        <button id="next-btn" class="text-gray-400 hover:text-white transition-colors hover:scale-110 transform duration-300">
                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
-                        <button id="full-like-btn" class="text-gray-400 hover:text-white transition-colors">
+
+                        <button id="full-like-btn" class="text-gray-600 hover:text-white transition-colors">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         </button>
                     </div>
 
-                    <div class="flex items-center gap-3 w-full max-w-[200px] mx-auto md:mx-0 opacity-50 hover:opacity-100 transition-opacity">
-                        <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.75" class="w-full accent-white">
+                    <div class="flex items-center gap-4 w-full max-w-[200px] mx-auto md:mx-0 opacity-50 hover:opacity-100 transition-opacity">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.75" class="w-full accent-white h-1 bg-white/10 rounded-lg appearance-none cursor-pointer">
                     </div>
                 </div>
             </div>
@@ -328,7 +336,6 @@
     </div>
 
     <audio id="audio-player" class="hidden"></audio>
-
     <script src="script.js"></script>
 </body>
 </html>
