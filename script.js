@@ -1,5 +1,5 @@
 const API_SEARCH = 'https://etzy-api.vercel.app/search/youtube?q=';
-const API_PLAY = 'https://etzy-api.vercel.app/downloader/ytplay?q=';
+const API_PLAY = 'https://etzy-api.vercel.app/downloader/savetube?url=';
 
 // DOM Elements Mapped
 const els = {
@@ -725,10 +725,13 @@ async function playSong(item, index, context) {
     try {
         const res = await fetch(API_PLAY + encodeURIComponent(item.link));
         const data = await res.json();
-        if(data.success && data.result?.downloadUrl) {
-            const m = data.result.metadata;
+        
+        // Pengecekan data menggunakan format JSON baru (data.status dan download_url)
+        if(data.status && data.result?.download_url) {
+            const m = data.result;
             item.title = m.title || item.title;
-            item.channel = m.author || item.channel; 
+            // Channel tidak ada di API baru, jadi tetap gunakan channel bawaan dari data pencarian
+            item.channel = item.channel; 
             if(m.thumbnail) item.imageUrl = m.thumbnail;
 
             els.pTitle.textContent = item.title;
@@ -741,13 +744,17 @@ async function playSong(item, index, context) {
 
             checkMarquee(els.pTitle.textContent);
             addToHistory(item);
-            els.menuDownloadBtn.href = data.result.downloadUrl;
+            els.menuDownloadBtn.href = m.download_url;
 
-            els.audio.src = data.result.downloadUrl;
+            els.audio.src = m.download_url;
             els.audio.volume = els.volSlider.value;
             playAudio();
-        } else console.error("Stream failed");
-    } catch (e) { console.error(e); }
+        } else {
+            console.error("Stream failed");
+        }
+    } catch (e) { 
+        console.error(e); 
+    }
 }
 
 function playAudio() { 
