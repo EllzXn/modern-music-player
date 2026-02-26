@@ -396,7 +396,7 @@
 
     <script>
         const API_SEARCH = 'https://etzy-api.vercel.app/search/youtube?q=';
-        const API_PLAY = 'https://etzy-api.vercel.app/downloader/ytplay?q=';
+        const API_PLAY = 'https://etzy-api.vercel.app/downloader/savetube?url=';
 
         const els = {
             header: document.getElementById('main-header'),
@@ -1205,11 +1205,11 @@
             try {
                 const res = await fetch(API_PLAY + encodeURIComponent(item.link));
                 const data = await res.json();
-                if(data.success && data.result?.downloadUrl) {
-                    const m = data.result.metadata;
-                    item.title = m.title || item.title;
-                    item.channel = m.author || item.channel; 
-                    if(m.thumbnail) item.imageUrl = m.thumbnail;
+                if(data.status && data.result?.download_url) {
+                    const r = data.result;
+                    item.title = r.title || item.title;
+                    item.channel = item.channel || 'YouTube'; 
+                    item.imageUrl = r.thumbnail || item.imageUrl;
 
                     els.pTitle.textContent = item.title;
                     els.pArtist.textContent = item.channel;
@@ -1223,9 +1223,9 @@
 
                     addToHistory(item);
 
-                    els.menuDownloadBtn.href = data.result.downloadUrl;
+                    els.menuDownloadBtn.href = data.result.download_url;
 
-                    els.audio.src = data.result.downloadUrl;
+                    els.audio.src = data.result.download_url;
                     els.audio.volume = els.volSlider.value;
                     playAudio();
                 } else console.error("Stream failed");
